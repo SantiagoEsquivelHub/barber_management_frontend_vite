@@ -19,3 +19,8 @@
     background: rgba(244,166,5,0.5)!important;
     border: none!important;
 }
+
+.btn-primary:hover {
+    background: rgba(244,100,5,0.5)!important;
+    border: none!important;
+}
