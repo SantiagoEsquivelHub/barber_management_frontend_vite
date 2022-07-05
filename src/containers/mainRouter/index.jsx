@@ -1,26 +1,21 @@
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Routes, Route, BrowserRouter as Router, Navigate } from 'react-router-dom'
 
 import ModulesRouter from '../../modules';
 import ErrorView from '../../security/views/error';
 import LoginView from '../../security/views/login';
-ModulesRouter
 
 
 const MainRouter = ({ location }) => {
-
-    if (location.pathname === '/') {
-        return <Redirect to={'/app'} />;
+    console.log(location);
+    if (location === '/') {
+        return <Navigate to={'login'} />;
     }
 
     return (
-        <Switch>
-
-            <Route path='/app' component={ModulesRouter} />
-            <Route path='/error' component={ErrorView} />
-            <Route path='/login' component={LoginView} />
-            <Redirect to='/error' />
-            
-        </Switch>
+        <Routes>
+           
+            <Route path='login' element={<LoginView />} />
+        </Routes>
 
     )
 

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import './login.css';
+//import AuthContext from "../../../containers/auth";
 
 const LoginView = () =>{
+
+ 
 
   const [datos, setDatos] = useState({
     usuario: "",
@@ -21,6 +24,8 @@ const LoginView = () =>{
       console.log("no enviar");
     }else{
       let res = await axios.post("http://localhost:3001/usuario/login",datos);
+      const accessToken = res.token;
+      setAuth({usuario, clave, accessToken})
       console.log(res.data);
     }
   };
