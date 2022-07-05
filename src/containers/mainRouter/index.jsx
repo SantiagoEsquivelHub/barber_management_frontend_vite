@@ -1,8 +1,9 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-import LoginView from '../../security/login';
-import ErrorView from '../../security/error';
 import ModulesRouter from '../../modules';
+import ErrorView from '../../security/views/error';
+import LoginView from '../../security/views/login';
+ModulesRouter
 
 
 const MainRouter = ({ location }) => {
