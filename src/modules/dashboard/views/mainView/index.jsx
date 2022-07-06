@@ -1,6 +1,12 @@
+import Sidebar from "../../../../containers/sidebar";
+
+
+
 const DashboardRouter = () =>{
 return(
-    <h1>DASHBOARD</h1>
+    <>
+    <Sidebar  />
+    </>
 );
 }
 

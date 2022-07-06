@@ -10,8 +10,29 @@ const ModulesRouter = ({ history, match }) => {
 
     return (
         <>
+  {/*  <AutContainer history={history}> */}
+            
+                <>
+                    <Sidebar  />
+                    <main>
+                        <Routes>
 
-<h1>HOLAA</h1>
+                            <Route path={`${match.url}/dashboard`} component={DashboardRouter} />
+                           {/*  {
+                                // ValidateRoles([1], user) &&
+                                <Route path={`${match.url}/staff`} component={} />
+                            }
+                            {
+                                //ValidateRoles([1, 2, 3, 4, 5, 6, 7, 8], user) &&
+                                <Route path={`${match.url}/users`} component={} />
+                            } */}
+                          
+
+                        </Routes>
+                    </main>
+                </>
+
+       {/*  </AutContainer> */}
         </>
     )
 }

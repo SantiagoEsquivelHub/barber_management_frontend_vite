@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter as Router } from 'react-router-dom'
 
 import MainRouter from './containers/mainRouter/index'
 import ModulesRouter from './modules'
+import DashboardRouter from './modules/dashboard/views/mainView'
 import ErrorView from './security/views/error'
 import LoginView from './security/views/login'
 
@@ -16,8 +17,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<MainRouter location="/"/>} />
         <Route path='login' element={<LoginView />} />
-        <Route path='app' element={<ModulesRouter />} />
-         <Route path='error' element={<ErrorView />} />
+        <Route path='main' element={<DashboardRouter />} />     
       </Routes>
     </Router>
 
