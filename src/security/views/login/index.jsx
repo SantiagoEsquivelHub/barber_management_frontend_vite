@@ -25,7 +25,6 @@ const LoginView = () =>{
     }else{
       let res = await axios.post("http://localhost:3001/usuario/login",datos);
       const accessToken = res.token;
-      setAuth({usuario, clave, accessToken})
       console.log(res.data);
     }
   };

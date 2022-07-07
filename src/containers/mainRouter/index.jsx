@@ -12,10 +12,16 @@ const MainRouter = ({ location }) => {
     }
 
     return (
-        <Routes>
-           
-            <Route path='login' element={<LoginView />} />
-        </Routes>
+        <Router>
+
+            <Sidebar />
+
+            <Routes>
+                <Route path='/' element={<MainRouter location="/" />} />
+                <Route path='main' element={<DashboardRouter />} />
+                <Route path='*' element={<ErrorView />} />
+            </Routes>
+        </Router>
 
     )
 

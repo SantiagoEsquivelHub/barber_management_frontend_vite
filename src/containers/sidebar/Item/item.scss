@@ -3,8 +3,7 @@
     position: relative;
     width: 60px;
     height: 50px;
-    color: #fe4d44;
-    background-color: #1f1f1f;
+    background: #FDC43F;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,9 +15,6 @@
         justify-content: center;
     }
 
-    path {
-        fill: #fe4d44;
-    }
 
     ::after {
         content: "";
@@ -46,11 +42,6 @@
         justify-content: center;
     }
 
-    a:hover {
-        path {
-            fill: white;
-        }
-    }
 }
 
 /* Sidebar Abierta e item Desactivado */
@@ -61,12 +52,13 @@
     align-items: center;
     gap: 15px;
     transition-duration: 0.3s;
-
+ 
     p {
-        color: #8f8f8f;
+        color: white;
         font-weight: bold;
         font-size: 14px;
         padding-bottom: 2px;
+        margin: 0!important;
     }
 
     div {
@@ -76,12 +68,6 @@
     }
 }
 
-/* Hovers Sidebar Cerrada */
-.normal:hover {
-    path {
-        fill: white;
-    }
-}
 
 /* Sidebar Abierta e item Activado */
 .linkOpen[aria-current] {
@@ -92,11 +78,8 @@
     align-items: center;
     gap: 15px;
     transition-duration: 0.3s;
-    background-color: #1f1f1f;
-
-    path {
-        fill: #fe4d44;
-    }
+    background: #FDC43F;
+   
 
     ::after {
         content: "";
@@ -119,6 +102,7 @@
         font-weight: bold;
         font-size: 14px;
         padding-bottom: 2px;
+        margin: 0!important;
     }
 
     p::after {
@@ -126,12 +110,3 @@
     }
 }
 
-/* Hovers Sidebar Abierta */
-.linkOpen:hover {
-    p {
-        color: white;
-    }
-    path {
-        fill: white;
-    }
-}
