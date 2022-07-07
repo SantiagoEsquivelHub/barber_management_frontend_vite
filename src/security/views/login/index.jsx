@@ -8,8 +8,7 @@ import './login.css';
 
 const LoginView = ({ setToken }) => {
 
-    const [user, setUser] = useState(null);
-
+    const [user, setUser] = useState(false);
     const [datos, setDatos] = useState({
         usuario: "",
         clave: ""
@@ -26,15 +25,18 @@ const LoginView = ({ setToken }) => {
         if (!e.target.checkValidity()) {
             console.log("no enviar");
         } else {
+            setUser(!user);
             let res = await axios.post("http://localhost:3001/usuario/login", datos);
-            const accessToken = res.data.token;
-            console.log(res.data);
-            setToken(accessToken);
-            setUser(user);
-            setDatos({
-                usuario: "",
-                clave: ""
-            })
+            setTimeout(() => {
+                const accessToken = res.data.token;
+                console.log(res.data);
+                setToken(accessToken);
+                setDatos({
+                    usuario: "",
+                    clave: ""
+                })
+            }, 5000);
+
         }
     };
 
@@ -63,11 +65,15 @@ const LoginView = ({ setToken }) => {
                                             Contraseña es requirida
                                         </div>
                                     </div>
-                                    <div className="d-flex align-items-center">
+                                    <div className="d-flex align-items-center justify-content-between">
 
                                         <button type="submit" className="btn btn-primary">
                                             <i className="bi bi-box-arrow-in-right"></i> Ingresar
                                         </button>
+                                        <div className={user ? "text-center" : "cargando"}>
+                                            <div className="spinner-grow text-warning" role="status">
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
