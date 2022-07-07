@@ -1,28 +1,38 @@
+import React, { useState } from 'react';
 import { Routes, Route, BrowserRouter as Router, Navigate } from 'react-router-dom'
-
-import ModulesRouter from '../../modules';
+import DashboardRouter from '../../modules/dashboard/views/mainView';
+import StaffView from '../../modules/staff/view/main';
+import StaffUserView from '../../modules/staff/view/staffUser';
 import ErrorView from '../../security/views/error';
 import LoginView from '../../security/views/login';
-
+import Sidebar from '../sidebar';
 
 const MainRouter = ({ location }) => {
-    console.log(location);
+
+    const [token, setToken] = useState();
+    if (!token) {
+      return <LoginView setToken={setToken} />
+    }
+
+    
+
+    console.log("location", location);
     if (location === '/') {
-        return <Navigate to={'login'} />;
+        return <Navigate to={'/main'} />;
     }
 
     return (
-        <Router>
-
-            <Sidebar />
-
-            <Routes>
-                <Route path='/' element={<MainRouter location="/" />} />
-                <Route path='main' element={<DashboardRouter />} />
-                <Route path='*' element={<ErrorView />} />
-            </Routes>
-        </Router>
-
+        <>
+           <Sidebar setToken={setToken}/>
+            
+                <Routes>
+                    <Route path='/main' element={<DashboardRouter />} />
+                    <Route path='/staff' element={<StaffView />} />
+                    <Route path='/staff/:id' element={<StaffUserView />} />
+            {/*  */}        <Route path='/*' element={<ErrorView />} />
+                </Routes>
+            
+        </>
     )
 
 }

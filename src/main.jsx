@@ -1,8 +1,6 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom/client'
-import { Routes, Route, BrowserRouter as Router } from 'react-router-dom'
-//import AuthContainer from './containers/auth'
-
+import { Routes, Route, BrowserRouter as Router, Navigate, useLocation } from 'react-router-dom'
 import MainRouter from './containers/mainRouter/index'
 import Sidebar from './containers/sidebar'
 import DashboardRouter from './modules/dashboard/views/mainView'
@@ -13,19 +11,17 @@ import LoginView from './security/views/login'
 
 
 const App = () => {
+
+  const location = useLocation();
+
+
   return (
 
-    <Router>
-      <Sidebar />
+  
       <Routes>
-        <Route path='/' element={<MainRouter location="/" />} />
-        <Route path='login' element={<LoginView />} />
-        <Route path='main' element={<DashboardRouter />} />
-        <Route path='staff' element={<StaffView />} />
-        <Route path='staff/:id' element={<StaffUserView />} />
-        <Route path='*' element={<ErrorView />} />
+        <Route path='/*' element={<MainRouter />} />
       </Routes>
-    </Router>
+   /*  */
 
   )
 }
@@ -33,8 +29,8 @@ const App = () => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-
-    <App />
-
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>
 )

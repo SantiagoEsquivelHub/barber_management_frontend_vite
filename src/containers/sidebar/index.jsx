@@ -5,7 +5,7 @@ import Item from "./Item";
 import './sidebar.scss';
 import userPhoto from '../../assets/images/UserPhoto.png'
 import { useNavigate } from "react-router-dom";
-const Sidebar = () => {
+const Sidebar = ({setToken}) => {
 
     const [open, setOpen] = useState(false);
     const [logout, setLogout] = useState(false);
@@ -14,7 +14,8 @@ const Sidebar = () => {
     const handleLogout = () => {
         setLogout(!logout);
         setTimeout(() => {
-           navegate("login");
+            setToken();
+           navegate("/");
            setLogout(false);
         }, 5000);
         
