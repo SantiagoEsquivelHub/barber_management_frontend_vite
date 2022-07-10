@@ -13,7 +13,7 @@ const App = () => {
 
   
       <Routes>
-        <Route path='/*' element={<MainRouter />} />
+        <Route path='/*' element={<MainRouter location={location}/>} />
       </Routes>
    /*  */
 
