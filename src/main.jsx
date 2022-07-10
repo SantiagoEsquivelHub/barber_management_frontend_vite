@@ -1,10 +1,30 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom/client'
-import LoginView from './security/login/login'
+import { Routes, Route, BrowserRouter as Router, Navigate, useLocation } from 'react-router-dom'
+import MainRouter from './containers/mainRouter/index'
+import 'antd/dist/antd.css';
+
+const App = () => {
+
+  const location = useLocation();
+
+
+  return (
+
+  
+      <Routes>
+        <Route path='/*' element={<MainRouter location={location}/>} />
+      </Routes>
+   /*  */
+
+  )
+}
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <LoginView />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>
 )
