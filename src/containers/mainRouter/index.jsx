@@ -15,9 +15,6 @@ const MainRouter = ({ location }) => {
       return <LoginView setToken={setToken} />
     }
 
-    
-
-    console.log("location", location);
     if (location.pathname === '/') {
         return <Navigate to='/main' />;
     }
