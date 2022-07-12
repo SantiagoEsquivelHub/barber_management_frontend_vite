@@ -1,0 +1,31 @@
+.crearUsuario .ant-form-item-label {
+  text-align: left !important;
+}
+
+.ant-form-item {
+  margin-bottom: 50px !important;
+}
+
+.foto_perfil .ant-form-item {
+  margin-bottom: 0px !important;
+}
+
+.anticon .anticon-upload {
+  color: rgba(244, 100, 5, 0.5) !important;
+}
+
+.ant-btn > .anticon + span {
+  color: rgba(244, 100, 5, 0.5);
+}
+
+.anticon .anticon-upload:hover {
+  color: rgba(244, 100, 5, 0.5) !important;
+}
+
+span.anticon.anticon-upload {
+  color: rgba(244, 100, 5, 0.5);
+}
+
+button.ant-btn.ant-btn-default:hover {
+  border-color: rgba(244, 100, 5, 0.5) !important;
+}

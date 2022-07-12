@@ -1,34 +1,70 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal } from 'antd';
-import axios from "axios";
+import {
+  Modal,
+  Form,
+  Input,
+  Select,
+  Button,
+  Col,
+  Row,
+  Upload,
+} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import CardUser from './components/CardUser';
+import './users.css'
 
+const { Option } = Select;
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 50 },
+};
 
 const UsersView = () => {
 
-  const [user, setUser] = useState(false)
+  const [user, setUser] = useState(false);
+  const [rol, setRol] = useState(false);
 
   const url = `http://${document.domain}:3001/usuarios/`;
+  const urlRol = `http://${document.domain}:3001/roles/`;
+  let token = localStorage.getItem("token");
+  let headers = new Headers();
+  headers.append("Authorization", "Bearer " + token);
+
 
 
   const getUsers = async (e) => {
 
     const requestOptions = {
-      method: 'GET'
+      method: 'GET',
+      headers: headers,
     }
 
     const res = await fetch(url, requestOptions);
     const data = await res.json();
-    console.log(data);
+    //console.log(data);
     setUser(data);
+
+  }
+
+  const getRoles = async (e) => {
+
+    const requestOptions = {
+      method: 'GET',
+      headers: headers,
+    }
+
+    const res = await fetch(urlRol, requestOptions);
+    const data = await res.json();
+    console.log("roles", data);
+    setRol(data);
 
   }
 
   useEffect(() => {
 
     getUsers();
-
+    getRoles();
 
   }, [])
 
@@ -53,6 +89,46 @@ const UsersView = () => {
   };
 
 
+  const [form] = Form.useForm();
+
+
+  const onFinish = () => {
+    console.log(values);
+  };
+
+  const onReset = () => {
+    form.resetFields();
+  };
+
+  const normFile = (e) => {
+    console.log('Upload event:', e);
+
+    if (Array.isArray(e)) {
+      return e;
+    }
+
+    return e?.fileList;
+  };
+
+  const [datos, setDatos] = useState({
+    nombre_usuario: '',
+    documento_usuario: '',
+    telefono_usuario: '',
+    fecha_nacimiento_usuario: '',
+    correo_usuario: '',
+    estado_usuario: '',
+    url_img_usuario: '',
+    rol_usuario: ''
+  })
+
+  const handleInputChange = (e) => {
+    setDatos({
+      ...datos,
+      [e.target.name]: [e.target.value]
+    })
+  }
+
+
   return (
     <div className='contenedor_main'>
       <h1>UsersView</h1>
@@ -65,58 +141,81 @@ const UsersView = () => {
         title="Crear usuario"
         onOk={handleOk}
         onCancel={handleCancel}
+        width="800px"
         footer={[
+          <Button htmlType="button" onClick={onReset}>
+            Reset
+          </Button>,
           <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
             Crear
           </Button>
+
         ]}
       >
-        <form method='POST' id='crearUsuario' name='crearUsuario' >
-          <div className='col-12 d-flex flex-column align-items-center'>
-            <label for='url_img_usuario'>Foto de perfil</label>
-            <input id='url_img_usuario' name='url_img_usuario' type='file' />
-          </div>
-          <div className='d-flex'>
-            <div className='col-6'>
-              <div className='m-4'>
-                <label for='nombre_usuario'>Nombre completo</label>
-                <input id='nombre_usuario' name='nombre_usuario' type='text' />
-              </div>
 
-              <div className='m-4'>
-                <label for='fecha_nacimiento_usuario'>Fecha de nacimiento</label>
-                <input id='fecha_nacimiento_usuario' name='fecha_nacimiento_usuario' type='date' />
-              </div>
+        <Form {...layout} form={form} name="crearUsuario" onFinish={onFinish} className="crearUsuario">
 
-              <div className='m-4'>
-                <label for='rol_usuario'>Rol</label>
-                <select id='rol_usuario' name='rol_usuario' />
-              </div>
+          <Row className='d-flex align-items-center justify-content-center foto_perfil'>
+            <Form.Item
+              name="upload"
+              label=""
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+            >
+              <Upload name="logo" action="/upload.do" listType="picture">
+                <Button icon={<UploadOutlined />}>Foto de perfil</Button>
+              </Upload>
+            </Form.Item>
+          </Row>
+
+          <Row className='col-12 d-flex flex-column align-items-center'>
+            <div className='d-flex justify-content-center'>
+              <Col span={12} className="m-3">
+                <Form.Item name="nombre_usuario" label="Nombre" rules={[{ required: true }]} className="d-flex flex-column">
+                  <Input type="text" onChange={handleInputChange} />
+                </Form.Item>
+                <Form.Item name="fecha_nacimiento_usuario" label="Nacimiento" rules={[{ required: true }]} className="d-flex flex-column">
+                  <Input type="date" onChange={handleInputChange} />
+                </Form.Item>
+                <Form.Item name="rol_usuario" label="Rol" rules={[{ required: true }]} className="d-flex flex-column">
+                  <Select
+                    defaultValue='Seleccione:'
+                    placeholder=""
+                    onChange={handleInputChange}
+                    allowClear
+                  >
+                    {!rol ? 'Cargando...' :
+
+                      rol.map((rol) => {
+                        return <Option key={rol.id_rol} value={rol.id_rol}>{rol.nombre_rol}</Option>
+
+                      })
+
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12} className="m-3">
+                <Form.Item name="correo_usuario" label="Correo" rules={[{ required: true }]} className="d-flex flex-column">
+                  <Input type="text" onChange={handleInputChange} />
+                </Form.Item>
+                <Form.Item name="documento_usuario" label="Documento" rules={[{ required: true }]} className="d-flex flex-column">
+                  <Input type="text" onChange={handleInputChange} />
+                </Form.Item>
+                <Form.Item name="telefono_usuario" label="Teléfono" rules={[{ required: true }]} className="d-flex flex-column">
+                  <Input type="text" onChange={handleInputChange} />
+                </Form.Item>
+              </Col>
             </div>
+          </Row>
 
-            <div className='col-6'>
-              <div className='m-4'>
-                <label for='correo_usuario'>Correo electrónico</label>
-                <input id='correo_usuario' name='correo_usuario' type='email' />
-              </div>
 
-              <div className='m-4'>
-                <label for='fecha_nacimiento_usuario'>Número de documento</label>
-                <input id='fecha_nacimiento_usuario' name='fecha_nacimiento_usuario' type='text' />
-              </div>
-
-              <div className='m-4'>
-                <label for='telefono_usuario'>Teléfono</label>
-                <input id='telefono_usuario' name='telefono_usuario' type='text'/>
-              </div>
-            </div>
-          </div>
-        </form>
+        </Form>
       </Modal>
 
 
       <ul>
-        {!user ? 'Cargando' :
+        {!user ? 'Cargando...' :
 
           user.map(user => {
             return <CardUser
@@ -136,10 +235,7 @@ const UsersView = () => {
 
 
 
-
-
-
-    </div>
+    </div >
   )
 }
 

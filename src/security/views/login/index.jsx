@@ -39,6 +39,7 @@ const LoginView = ({ setToken }) => {
                 const accessToken = res.data.token;
                 console.log(res.data);
                 setToken(accessToken);
+                localStorage.setItem("token", accessToken);
                 setDatos({
                     usuario: "",
                     clave: ""
