@@ -25,6 +25,20 @@ const UsersView = () => {
 
   const [user, setUser] = useState(false);
   const [rol, setRol] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [form] = Form.useForm();
+
+  const [datos, setDatos] = useState({
+    nombre_usuario: '',
+    documento_usuario: '',
+    telefono_usuario: '',
+    fecha_nacimiento_usuario: '',
+    correo_usuario: '',
+    estado_usuario: '',
+    url_img_usuario: '',
+    rol_usuario: ''
+  })
 
   const url = `http://${document.domain}:3001/usuarios/`;
   const urlRol = `http://${document.domain}:3001/roles/`;
@@ -45,7 +59,7 @@ const UsersView = () => {
 
     const res = await fetch(url, requestOptions);
     const data = await res.json();
-    //console.log(data);
+
     setUser(data);
 
   }
@@ -71,9 +85,6 @@ const UsersView = () => {
 
   }, [])
 
-
-  const [loading, setLoading] = useState(false);
-  const [visible, setVisible] = useState(false);
 
   const showModal = () => {
     setVisible(true);
@@ -110,10 +121,6 @@ const UsersView = () => {
   };
 
 
-  const [form] = Form.useForm();
-
-
-
   const onReset = () => {
     form.resetFields();
   };
@@ -126,27 +133,13 @@ const UsersView = () => {
     return e.fileList;
   };
 
-  const [datos, setDatos] = useState({
-    nombre_usuario: '',
-    documento_usuario: '',
-    telefono_usuario: '',
-    fecha_nacimiento_usuario: '',
-    correo_usuario: '',
-    estado_usuario: '',
-    url_img_usuario: '',
-    rol_usuario: ''
-  })
-
 
   const handleInputChange = (e) => {
-
 
     setDatos({
       ...datos,
       [e.target.name]: e.target.value
     })
-
-
 
   }
 
