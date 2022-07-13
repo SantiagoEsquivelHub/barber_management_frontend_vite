@@ -1,0 +1,39 @@
+.crearUsuario .ant-form-item-label,
+.editarUsuario .ant-form-item-label {
+  text-align: left !important;
+}
+
+.crearUsuario .ant-form-item,
+.editarUsuario .ant-form-item {
+  margin-bottom: 50px !important;
+}
+
+.crearUsuario .foto_perfil .ant-form-item,
+.editarUsuario .foto_perfil .ant-form-item {
+  margin-bottom: 0px !important;
+}
+
+.crearUsuario .anticon .anticon-upload,
+.editarUsuario .anticon .anticon-upload {
+  color: rgba(244, 100, 5, 0.5) !important;
+}
+
+.crearUsuario .ant-btn > .anticon + span,
+.editarUsuario .ant-btn > .anticon + span {
+  color: rgba(244, 100, 5, 0.5);
+}
+
+.crearUsuario .anticon .anticon-upload:hover,
+.editarUsuario .anticon .anticon-upload:hover {
+  color: rgba(244, 100, 5, 0.5) !important;
+}
+
+.crearUsuario span.anticon.anticon-upload,
+.editarUsuario span.anticon.anticon-upload {
+  color: rgba(244, 100, 5, 0.5);
+}
+
+.crearUsuario button.ant-btn.ant-btn-default:hover,
+.editarUsuario button.ant-btn.ant-btn-default:hover {
+  border-color: rgba(244, 100, 5, 0.5) !important;
+}

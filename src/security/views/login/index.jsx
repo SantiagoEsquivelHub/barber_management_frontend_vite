@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from 'prop-types';
 import axios from "axios";
 import './login.css';
-import { Button, notification, Space } from 'antd';
+import { notification } from 'antd';
 
 
 
@@ -10,11 +10,11 @@ const LoginView = ({ setToken }) => {
 
     const openNotificationWithIcon = (type) => {
         notification[type]({
-          message: '¡Credenciales incorrectas!',
-          description:
-            'Los datos ingresados son incorrectos. Vefifícalos e inténtalo de nuevo :)',
+            message: '¡Credenciales incorrectas!',
+            description:
+                'Los datos ingresados son incorrectos. Vefifícalos e inténtalo de nuevo :)',
         });
-      };
+    };
 
     const [user, setUser] = useState(false);
     const [datos, setDatos] = useState({
@@ -30,7 +30,7 @@ const LoginView = ({ setToken }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
 
         try {
             let res = await axios.post("http://localhost:3001/usuario/login", datos);
@@ -39,20 +39,21 @@ const LoginView = ({ setToken }) => {
                 const accessToken = res.data.token;
                 console.log(res.data);
                 setToken(accessToken);
+                localStorage.setItem("token", accessToken);
                 setDatos({
                     usuario: "",
                     clave: ""
                 })
-            }, 5000); 
+            }, 5000);
         } catch (error) {
             if (error.response) {
-                console.log(error.response.data) ;
+                console.log(error.response.data);
                 openNotificationWithIcon('warning');
-              } else if (error.request) {
+            } else if (error.request) {
                 console.log(error.request);
-              } else {
+            } else {
                 console.log(error.message);
-              }
+            }
         }
     };
 

@@ -11,13 +11,11 @@ import Sidebar from '../sidebar';
 const MainRouter = ({ location }) => {
 
     const [token, setToken] = useState();
-    if (!token) {
+    const tokenLocal = localStorage.getItem('token');
+    if (!token && tokenLocal == '') {
       return <LoginView setToken={setToken} />
     }
 
-    
-
-    console.log("location", location);
     if (location.pathname === '/') {
         return <Navigate to='/main' />;
     }
