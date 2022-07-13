@@ -7,7 +7,9 @@ import 'antd/dist/antd.css';
 const App = () => {
 
   const location = useLocation();
-
+  if (location.pathname === '/*') {
+   
+}
 
   return (
 

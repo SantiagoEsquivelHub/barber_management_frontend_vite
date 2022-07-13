@@ -8,6 +8,7 @@ import {
   Col,
   Row,
   Upload,
+  notification
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import CardUser from './components/CardUser';
@@ -16,7 +17,7 @@ import './users.css'
 const { Option } = Select;
 
 const layout = {
-  labelCol: { span: 8 },
+  labelCol: { span: 20 },
   wrapperCol: { span: 50 },
 };
 
@@ -78,7 +79,7 @@ const UsersView = () => {
     setVisible(true);
   };
 
-  const handleOk = async () => {
+  const handleOk = async (e, form) => {
 
     const requestOptions = {
       method: 'POST',
@@ -87,18 +88,21 @@ const UsersView = () => {
         ...datos
       }
       )
-     
+
     }
 
     const res = await fetch(urlCrearUsuario, requestOptions);
-    console.log(res);
+    console.log(res)
+    openNotificationWithIcon('success');
 
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setVisible(false);
       onReset();
+      window.location.reload();
     }, 3000);
+
   };
 
   const handleCancel = () => {
@@ -109,9 +113,6 @@ const UsersView = () => {
   const [form] = Form.useForm();
 
 
-  const onFinish = () => {
-    console.log(values);
-  };
 
   const onReset = () => {
     form.resetFields();
@@ -126,25 +127,25 @@ const UsersView = () => {
   };
 
   const [datos, setDatos] = useState({
-    "nombre_usuario": '',
-    "documento_usuario": '',
-    "telefono_usuario": '',
-    "fecha_nacimiento_usuario": '',
-    "correo_usuario": '',
-    "estado_usuario": '',
-    "url_img_usuario": '',
-    "rol_usuario": ''
+    nombre_usuario: '',
+    documento_usuario: '',
+    telefono_usuario: '',
+    fecha_nacimiento_usuario: '',
+    correo_usuario: '',
+    estado_usuario: '',
+    url_img_usuario: '',
+    rol_usuario: ''
   })
 
 
   const handleInputChange = (e) => {
 
 
-      setDatos({
-        ...datos,
-        [e.target.name]: e.target.value
-      })
-    
+    setDatos({
+      ...datos,
+      [e.target.name]: e.target.value
+    })
+
 
 
   }
@@ -166,17 +167,38 @@ const UsersView = () => {
     },
   }
 
-  const getUrl = () => {
-
+  const getUrl = async () => {
     const fileInput = document.getElementById('url_img_usuario');
-
     const selectedFile = fileInput.files[0];
+
+    let result = await getBase64(selectedFile);
+    let url = result;
 
     setDatos({
       ...datos,
-      [fileInput.id]: '/src/assets/images_users/' + selectedFile.name
+      [fileInput.id]: url
     })
   }
+
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => resolve(reader.result);
+
+      reader.onerror = (error) => reject(error);
+    });
+
+
+  const openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: '¡Usuario creado correctamente!',
+      description:
+        'Los datos ingresados son correctos :)',
+    });
+  };
 
 
   return (
@@ -189,21 +211,15 @@ const UsersView = () => {
       <Modal
         visible={visible}
         title="Crear usuario"
-        onOk={handleOk}
         onCancel={handleCancel}
         width="800px"
         footer={[
-          <Button htmlType="button" onClick={onReset}>
-            Reset
-          </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            Crear
-          </Button>
+
 
         ]}
       >
 
-        <Form {...layout} form={form} name="crearUsuario" onFinish={onFinish} className="crearUsuario">
+        <Form {...layout} form={form} name="crearUsuario" className="crearUsuario" id="crearUsuario" onFinish={handleOk}>
 
           <Row className='d-flex align-items-center justify-content-center foto_perfil'>
             <Form.Item
@@ -214,7 +230,7 @@ const UsersView = () => {
               onChange={getUrl}
               rules={[{ required: true }]}
             >
-              <Upload name="url_img_usuario" listType="picture" {...props} maxCount={1} id="url_img_usuario">
+              <Upload name="url_img_usuario" listType="picture" {...props} maxCount={1} id="url_img_usuario" >
                 <Button icon={<UploadOutlined />}>Foto de perfil</Button>
               </Upload>
             </Form.Item>
@@ -230,7 +246,7 @@ const UsersView = () => {
                   <Input type="date" onChange={handleInputChange} name="fecha_nacimiento_usuario" />
                 </Form.Item>
                 <Form.Item name="rol_usuario" label="Rol" rules={[{ required: true }]} className="d-flex flex-column">
-                  <Select
+                  <Select required
                     defaultValue='Seleccione:'
                     placeholder=""
                     onChange={handleSelectChange}
@@ -261,8 +277,16 @@ const UsersView = () => {
               </Col>
             </div>
           </Row>
-
-
+          <div className='d-flex justify-content-center'>
+            <Form.Item >
+              <Button htmlType="button" onClick={onReset}>
+                Reset
+              </Button>,
+              <Button type="primary" htmlType="submit" loading={loading}>
+                Crear
+              </Button>
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
 

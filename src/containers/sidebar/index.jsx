@@ -13,6 +13,7 @@ const Sidebar = ({setToken}) => {
     let navegate = useNavigate();
     const handleLogout = () => {
         setLogout(!logout);
+        localStorage.setItem('token', '');
         setTimeout(() => {
             setToken();
            navegate("/");
