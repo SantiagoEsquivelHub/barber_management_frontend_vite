@@ -28,6 +28,11 @@
   color: rgba(244, 100, 5, 0.5) !important;
 }
 
+.crearUsuario .anticon .anticon-upload:active,
+.editarUsuario .anticon .anticon-upload:active {
+  color: rgba(244, 100, 5, 0.5) !important;
+}
+
 .crearUsuario span.anticon.anticon-upload,
 .editarUsuario span.anticon.anticon-upload {
   color: rgba(244, 100, 5, 0.5);

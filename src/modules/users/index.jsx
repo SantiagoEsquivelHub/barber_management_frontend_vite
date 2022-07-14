@@ -42,7 +42,7 @@ const UsersView = () => {
 
   const url = `http://${document.domain}:3001/usuarios/`;
   const urlRol = `http://${document.domain}:3001/roles/`;
-  const urlCrearUsuario = `http://${document.domain}:3001/usuario/`;
+  const urlCrearUsuario = `http://${document.domain}:3001/crearUsuario/`;
 
   let token = localStorage.getItem("token");
   let headers = new Headers();
@@ -103,7 +103,7 @@ const UsersView = () => {
     }
 
     const res = await fetch(urlCrearUsuario, requestOptions);
-    console.log(res)
+    //console.log(res)
     openNotificationWithIcon('success');
 
     setLoading(true);
@@ -164,15 +164,27 @@ const UsersView = () => {
     const fileInput = document.getElementById('url_img_usuario');
     const selectedFile = fileInput.files[0];
 
-    let result = await getBase64(selectedFile);
-    let url = result;
+    const btn = document.getElementsByClassName('btnCrearUsuario');
 
-    setDatos({
-      ...datos,
-      [fileInput.id]: url
-    })
+    if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
+      //console.log('LLEGO');
+      alert("Solo se permiten imágenes en PDF, JPG y JPEG")
+      fileInput.value = "";
+      //console.log(btn[0])
+      btn[0].setAttribute('disabled', 'true');
+    } else {
+      btn[0].removeAttribute('disabled');
+
+
+      let result = await getBase64(selectedFile);
+      let url = result;
+
+      setDatos({
+        ...datos,
+        [fileInput.id]: url
+      })
+    }
   }
-
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -221,9 +233,9 @@ const UsersView = () => {
               valuePropName="fileList"
               getValueFromEvent={normFile}
               onChange={getUrl}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Este campo es obligatorio" }]}
             >
-              <Upload name="url_img_usuario" listType="picture" {...props} maxCount={1} id="url_img_usuario" >
+              <Upload name="url_img_usuario" listType="picture" {...props} maxCount={1} id="url_img_usuario" accept="image/png, image/jpeg, image/jpg">
                 <Button icon={<UploadOutlined />}>Foto de perfil</Button>
               </Upload>
             </Form.Item>
@@ -232,13 +244,13 @@ const UsersView = () => {
           <Row className='col-12 d-flex flex-column align-items-center'>
             <div className='d-flex justify-content-center'>
               <Col span={12} className="m-3">
-                <Form.Item name="nombre_usuario" label="Nombre" rules={[{ required: true }]} className="d-flex flex-column">
+                <Form.Item name="nombre_usuario" label="Nombre" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Input type="text" onChange={handleInputChange} name="nombre_usuario" />
                 </Form.Item>
-                <Form.Item name="fecha_nacimiento_usuario" label="Nacimiento" rules={[{ required: true }]} className="d-flex flex-column">
+                <Form.Item name="fecha_nacimiento_usuario" label="Nacimiento" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Input type="date" onChange={handleInputChange} name="fecha_nacimiento_usuario" />
                 </Form.Item>
-                <Form.Item name="rol_usuario" label="Rol" rules={[{ required: true }]} className="d-flex flex-column">
+                <Form.Item name="rol_usuario" label="Rol" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Select required
                     defaultValue='Seleccione:'
                     placeholder=""
@@ -258,13 +270,13 @@ const UsersView = () => {
                 </Form.Item>
               </Col>
               <Col span={12} className="m-3">
-                <Form.Item name="correo_usuario" label="Correo" rules={[{ required: true }]} className="d-flex flex-column">
+                <Form.Item name="correo_usuario" label="Correo" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Input type="text" onChange={handleInputChange} name="correo_usuario" />
                 </Form.Item>
-                <Form.Item name="documento_usuario" label="Documento" rules={[{ required: true }]} className="d-flex flex-column">
+                <Form.Item name="documento_usuario" label="Documento" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Input type="text" onChange={handleInputChange} name="documento_usuario" />
                 </Form.Item>
-                <Form.Item name="telefono_usuario" label="Teléfono" rules={[{ required: true }]} className="d-flex flex-column">
+                <Form.Item name="telefono_usuario" label="Teléfono" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Input type="text" onChange={handleInputChange} name="telefono_usuario" />
                 </Form.Item>
               </Col>
@@ -274,8 +286,8 @@ const UsersView = () => {
             <Form.Item >
               <Button htmlType="button" onClick={onReset}>
                 Reset
-              </Button>,
-              <Button type="primary" htmlType="submit" loading={loading}>
+              </Button>
+              <Button type="primary" htmlType="submit" loading={loading} className="btnCrearUsuario">
                 Crear
               </Button>
             </Form.Item>
