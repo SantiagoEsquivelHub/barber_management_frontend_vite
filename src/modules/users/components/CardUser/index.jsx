@@ -391,37 +391,63 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                 ]}
             >
 
-                <table className='tableUser'>
 
 
-                    {
-                        !users ? 'Cargando...' :
-                            <>
-                                <tr>
-                                    <th><img src={users.url_img_usuario} /></th>
-                                </tr>
-                                <tr>
-                                    <th>{users.nombre_usuario}</th>
-                                </tr>
-                                <tr>
-                                    <th>{users.correo_usuario}</th>
-                                </tr>
-                                <tr>
-                                    <th>{users.telefono_usuario}</th>
-                                </tr>
-                                <tr>
-                                    <th>{users.estado_usuario}</th>
-                                </tr>
 
-                            </>
+                {
+                    !users ? 'Cargando...' :
+                        <>
+                            <div className='d-flex justify-content-center align-items-center imgUser m-2'>
+                                <img src={users.url_img_usuario} />
+                            </div>
+                            <table className='tableUser table table-bordered'>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Campo</th>
+                                        <th scope="col">Información</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
+                                    <tr>
+                                        <td>Nombre</td>
+                                        <td>{users.nombre_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Documento</td>
+                                        <td>{users.documento_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Correo</td>
+                                        <td>{users.correo_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Teléfono</td>
+                                        <td>{users.telefono_usuario == null ? 'Sin información' : users.telefono_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fecha de nacimiento</td>
+                                        <td>{users.fecha_nacimiento_usuario == null ? 'Sin información' : users.fecha_nacimiento_usuario.split('T')[0]}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rol</td>
+                                        <td>{users.nombre_rol == null ? 'Sin información' : users.nombre_rol}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estado</td>
+                                        <td>{users.nombre_estado == null || users.nombre_estado == undefined ? 'Sin información' : users.nombre_estado}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                    }
-                </table>
+                        </>
+                }
+
             </Modal>
 
         </>
     )
+
 }
 
 export default CardUser;

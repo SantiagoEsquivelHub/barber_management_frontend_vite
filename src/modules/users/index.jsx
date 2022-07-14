@@ -15,6 +15,7 @@ import CardUser from './components/CardUser';
 import './users.css'
 
 const { Option } = Select;
+const { Search } = Input;
 
 const layout = {
   labelCol: { span: 20 },
@@ -27,6 +28,10 @@ const UsersView = () => {
   const [rol, setRol] = useState(false);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [busqueda, setBusqueda] = useState({
+    search: '',
+    page: ''
+  })
   const [form] = Form.useForm();
 
   const [datos, setDatos] = useState({
@@ -43,6 +48,7 @@ const UsersView = () => {
   const url = `http://${document.domain}:3001/usuarios/`;
   const urlRol = `http://${document.domain}:3001/roles/`;
   const urlCrearUsuario = `http://${document.domain}:3001/crearUsuario/`;
+  const urlBusqueda = `http://${document.domain}:3001/busqueda/`;
 
   let token = localStorage.getItem("token");
   let headers = new Headers();
@@ -205,12 +211,47 @@ const UsersView = () => {
     });
   };
 
+  const onSearchUsers = async(value) => {
+
+    setBusqueda({
+      search: value,
+      page: 1
+    });
+
+
+    console.log(value)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        ...busqueda
+      })
+    }
+
+    const ruta = urlBusqueda + value;
+
+    console.log(ruta);
+
+    const res = await fetch(ruta, requestOptions);
+    const data = await res.json();
+
+    console.log(data);
+  };
+
 
   return (
     <div className='contenedor_main'>
       <h1>Usuarios</h1>
 
       <div className='d-flex justify-content-end'>
+        <Search
+          placeholder="input search text"
+          onSearch={onSearchUsers}
+          style={{
+            width: 200,
+          }}
+          enterButton />
         <Button type="primary" onClick={showModal} className="btnAgregarUsuario">
           Añadir usuario
         </Button>
@@ -299,7 +340,7 @@ const UsersView = () => {
       </Modal>
 
       <div>
-        <ul className='col-10'>
+        <ul className=''>
           {!user ? 'Cargando...' :
 
             user.map(user => {
