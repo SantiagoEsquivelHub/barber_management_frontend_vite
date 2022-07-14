@@ -8,7 +8,8 @@ import {
   Col,
   Row,
   Upload,
-  notification
+  notification,
+  Result
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import CardUser from './components/CardUser';
@@ -31,7 +32,9 @@ const UsersView = () => {
   const [busqueda, setBusqueda] = useState({
     search: '',
     page: ''
-  })
+  });
+  const [dataUser, setDataUser] = useState(false);
+  const [result, setResult] = useState({});
   const [form] = Form.useForm();
 
   const [datos, setDatos] = useState({
@@ -49,7 +52,7 @@ const UsersView = () => {
   const urlRol = `http://${document.domain}:3001/roles/`;
   const urlCrearUsuario = `http://${document.domain}:3001/crearUsuario/`;
   const urlBusqueda = `http://${document.domain}:3001/busqueda/`;
-
+  const bodyUsers = document.getElementById('bodyUsers');
   let token = localStorage.getItem("token");
   let headers = new Headers();
   headers.append("Authorization", "Bearer " + token);
@@ -211,34 +214,100 @@ const UsersView = () => {
     });
   };
 
-  const onSearchUsers = async(value) => {
+  const onSearchUsers = async (value) => {
 
-    setBusqueda({
-      search: value,
-      page: 1
-    });
+    /*     bodyUsers.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-warning" role="status">
+        <span class="sr-only"></span>
+      </div>
+      </div>` */
+      console.log(typeof(value))
+    if (value == '') {
+      getUsers();
+      setDataUser(false)
+    } else {
 
 
-    console.log(value)
 
-    const requestOptions = {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({
-        ...busqueda
-      })
+
+      setTimeout(() => {
+        setBusqueda({
+          search: value,
+          page: 1
+        });
+
+      }, 3000);
+
+
+
+      console.log(value)
+
+      const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          ...busqueda
+        })
+      }
+
+      const ruta = urlBusqueda + value;
+
+      console.log(ruta);
+
+      const res = await fetch(ruta, requestOptions);
+      const data = await res.json();
+      let busquedaArr = Object.values(data["result"]);
+
+      if (data["result"].length == 0) {
+        setResult(false)
+      } else {
+        setResult(true)
+      }
+      setDataUser(busquedaArr);
+      setUser(false);
     }
+    /* 
+        if (data['result'].length == 1) {
+    
+        } else {
+    
+        }
+    
+        if (data['next'] == null) {
+    
+        } else {
+    
+        }
+    
+        if (data['previous'] == null) {
+    
+        } else {
+    
+        } */
 
-    const ruta = urlBusqueda + value;
 
-    console.log(ruta);
 
-    const res = await fetch(ruta, requestOptions);
-    const data = await res.json();
 
-    console.log(data);
-  };
-
+    /* else {
+ 
+      busquedaArr.forEach(user => {
+        let busquedaHTML =
+          `<CardUser
+        key=${user.id_usuario}
+        nombre=${user.nombre_usuario}
+        correo=${user.correo_usuario}
+        telefono=${user.telefono_usuario}
+        estado=${user.estado_usuario}
+        url=${user.url_img_usuario}
+        id=${user.id_usuario}
+        />`;
+ 
+        bodyUsers.innerHTML += busquedaHTML;
+ 
+      })
+    }  */
+  }
 
   return (
     <div className='contenedor_main'>
@@ -339,9 +408,9 @@ const UsersView = () => {
         </Form>
       </Modal>
 
-      <div>
+      <div id='bodyUsers'>
         <ul className=''>
-          {!user ? 'Cargando...' :
+          {!user ? '' :
 
             user.map(user => {
               return <CardUser
@@ -358,6 +427,31 @@ const UsersView = () => {
 
           }
         </ul>
+        <ul>
+          {!dataUser ? '' :
+
+            dataUser.map(dataUser => {
+              return <CardUser
+                key={dataUser.id_usuario}
+                nombre={dataUser.nombre_usuario}
+                correo={dataUser.correo_usuario}
+                telefono={dataUser.telefono_usuario}
+                estado={dataUser.estado_usuario}
+                url={dataUser.url_img_usuario}
+                id={dataUser.id_usuario}
+              />
+
+            })
+
+          }
+        </ul>
+        <div>
+          {
+            !result ? <Result
+              title="Sin resultados"
+            /> : ''
+          }
+        </div>
       </div>
 
 
