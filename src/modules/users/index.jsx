@@ -208,11 +208,14 @@ const UsersView = () => {
 
   return (
     <div className='contenedor_main'>
-      <h1>UsersView</h1>
+      <h1>Usuarios</h1>
 
-      <Button type="primary" onClick={showModal}>
-        Añadir usuario
-      </Button>
+      <div className='d-flex justify-content-end'>
+        <Button type="primary" onClick={showModal} className="btnAgregarUsuario">
+          Añadir usuario
+        </Button>
+      </div>
+
       <Modal
         visible={visible}
         title="Crear usuario"
@@ -295,26 +298,26 @@ const UsersView = () => {
         </Form>
       </Modal>
 
+      <div>
+        <ul className='col-10'>
+          {!user ? 'Cargando...' :
 
-      <ul>
-        {!user ? 'Cargando...' :
+            user.map(user => {
+              return <CardUser
+                key={user.id_usuario}
+                nombre={user.nombre_usuario}
+                correo={user.correo_usuario}
+                telefono={user.telefono_usuario}
+                estado={user.estado_usuario}
+                url={user.url_img_usuario}
+                id={user.id_usuario}
+              />
 
-          user.map(user => {
-            return <CardUser
-              key={user.id_usuario}
-              nombre={user.nombre_usuario}
-              correo={user.correo_usuario}
-              telefono={user.telefono_usuario}
-              estado={user.estado_usuario}
-              url={user.url_img_usuario}
-              id={user.id_usuario}
-            />
+            })
 
-          })
-
-        }
-      </ul>
-
+          }
+        </ul>
+      </div>
 
 
     </div >

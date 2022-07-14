@@ -24,10 +24,11 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
     const { confirm } = Modal;
 
 
-    const [user, setUser] = useState(false);
+    const [users, setUsers] = useState(false);
     const [rol, setRol] = useState(false);
     const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [visibleVerUsuario, setVisibleVerUsuario] = useState(false)
     const [form] = Form.useForm();
 
     const [datos, setDatos] = useState({
@@ -37,6 +38,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         url_img_usuario: ''
     })
 
+    const urlVerUsuario = `http://${document.domain}:3001/usuarios/`;
     const urlEditarUsuario = `http://${document.domain}:3001/editarUsuario/`;
     const urlEliminarUsuario = `http://${document.domain}:3001/eliminarUsuario/`;
 
@@ -45,9 +47,10 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
     headers2.append("Authorization", "Bearer " + token);
     headers2.append("Content-type", "application/json");
     headers2.append("Access-Control-Allow-Origin", "*")
+
     const updateUsers = async (e) => {
         let idUser = localStorage.getItem('idUser');
-  
+
         const requestOptions = {
             method: 'POST',
             headers: headers2,
@@ -73,19 +76,44 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
 
 
-    /* const getRoles = async (e) => {
+    const deleteUsers = async (idUserDel) => {
+
+        const requestOptions = {
+            method: 'POST',
+            headers: headers2,
+        }
+
+        const ruta = urlEliminarUsuario + idUserDel;
+        console.log(ruta)
+        const res = await fetch(ruta, requestOptions);
+
+        openNotificationWithIconDelete('success');
+
+        setLoading(true);
+        setTimeout(() => {
+            localStorage.removeItem('idUser');
+            window.location.reload();
+        }, 3000);
+
+    }
+
+
+    const getUsers = async (idUserVer) => {
 
         const requestOptions = {
             method: 'GET',
-            headers: headers,
+            headers: headers2,
         }
 
-        const res = await fetch(urlRol, requestOptions);
+        const ruta = urlVerUsuario + idUserVer;
+        console.log(ruta);
+        const res = await fetch(ruta, requestOptions);
         const data = await res.json();
-        //console.log("roles", data);
-        setRol(data);
+        console.log(data[0]);
+        setUsers(data[0]);
+        localStorage.removeItem('idUserVer');
 
-    } */
+    }
 
     const getId = (e) => {
 
@@ -95,6 +123,13 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         setVisible(true);
     }
 
+    const getIdDelete = (e) => {
+        console.log(e.target);
+        let idUserDel = e.target.id;
+        localStorage.setItem('idUserDel', idUserDel);
+        console.log(idUserDel);
+        return idUserDel;
+    }
 
     const handleCancel = () => {
         setVisible(false);
@@ -140,7 +175,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
             //console.log('LLEGO');
             alert("Solo se permiten imágenes en PDF, JPG y JPEG")
-            fileInput.value= "";
+            fileInput.value = "";
             //console.log(btn[0])
             btn[0].setAttribute('disabled', 'true');
         } else {
@@ -187,10 +222,37 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         });
     };
 
+    const openNotificationWithIconDelete = (type) => {
+        notification[type]({
+            message: '¡Usuario eliminado correctamente!',
+            description:
+                'El usuario ha sido desterrado :)',
+        });
+    };
 
 
+    const openUser = (e) => {
 
-    const showDeleteConfirm = () => {
+        let idUserVer = e.target.id;
+        localStorage.setItem('idUserVer', idUserVer);
+
+        console.log(idUserVer);
+
+        getUsers(idUserVer);
+
+        setVisibleVerUsuario(true)
+
+    }
+
+    const handleOkUser = () => {
+        setVisibleVerUsuario(false);
+    };
+
+
+    const showDeleteConfirm = async (e) => {
+
+        let idUserDel = getIdDelete(e);
+
         confirm({
             title: '¿Estás seguro de eliminar este usuario?',
             icon: <ExclamationCircleOutlined />,
@@ -199,7 +261,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             okType: 'danger',
             cancelText: 'No',
             onOk() {
-                console.log('OK');
+                deleteUsers(idUserDel);
             },
         });
     };
@@ -207,7 +269,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     return (
         <>
-            <div id={id}>
+            <div id={id} className="cardUser">
 
                 <li class="ant-list-item"><div class="ant-list-item-meta">
                     <div class="ant-list-item-meta-avatar">
@@ -216,28 +278,30 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                         </span>
                     </div>
                     <div class="ant-list-item-meta-content">
-                        <h4 class="ant-list-item-meta-title">
-                            <a >{nombre}</a>
+                        <h4 class="ant-list-item-meta-title" >
+                            <a onClick={openUser} id={id}>{nombre}</a>
                         </h4>
                     </div>
                     <div class="ant-list-item-meta-content">
-                        <div class="ant-list-item-meta-description">{correo}</div>
+                        <div class="ant-list-item-meta-description correo">{correo}</div>
                     </div>
                     <div class="ant-list-item-meta-content">
-                        <div class="ant-list-item-meta-description">{telefono}</div>
+                        <div class="ant-list-item-meta-description telefono">{telefono}</div>
                     </div>
                 </div>
-                    <div>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
+                    <div className={estado == 1 ? 'activo' : 'deshabilitado'}>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
                     <ul class="ant-list-item-action">
-                        <li onClick={getId} id={id}>
+                        <li>
                             <div >
                                 {/* <EditOutlined className={id}/> */}
-                                <svg id={id} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={id} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
+                                <svg className='editar' onClick={getId} id={id} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={id} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
                                 {/*    <FontAwesomeIcon icon="fa-solid fa-user-pen" id={id}/> */}
                             </div>
                         </li>
-                        <li onClick={showDeleteConfirm}>
-                            <a ><DeleteOutlined /></a>
+                        <li>
+                            <div>
+                                <svg className='eliminar' onClick={showDeleteConfirm} id={id} viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true" data-darkreader-inline-fill="" ><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
+                            </div>
                         </li>
                     </ul>
                 </li>
@@ -315,6 +379,47 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                     </div>
                 </Form>
             </Modal>
+
+
+            <Modal
+                visible={visibleVerUsuario}
+                title="Ver usuario"
+                onCancel={handleOkUser}
+                width="800px"
+                footer={[
+
+                ]}
+            >
+
+                <table className='tableUser'>
+
+
+                    {
+                        !users ? 'Cargando...' :
+                            <>
+                                <tr>
+                                    <th><img src={users.url_img_usuario} /></th>
+                                </tr>
+                                <tr>
+                                    <th>{users.nombre_usuario}</th>
+                                </tr>
+                                <tr>
+                                    <th>{users.correo_usuario}</th>
+                                </tr>
+                                <tr>
+                                    <th>{users.telefono_usuario}</th>
+                                </tr>
+                                <tr>
+                                    <th>{users.estado_usuario}</th>
+                                </tr>
+
+                            </>
+
+
+                    }
+                </table>
+            </Modal>
+
         </>
     )
 }

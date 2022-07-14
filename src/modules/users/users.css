@@ -42,3 +42,81 @@
 .editarUsuario button.ant-btn.ant-btn-default:hover {
   border-color: rgba(244, 100, 5, 0.5) !important;
 }
+
+.btnAgregarUsuario {
+  border-color: rgba(244, 100, 5, 0.5) !important;
+  background: transparent !important;
+  color: rgba(244, 100, 5, 0.5) !important;
+  border-radius: 20px !important;
+}
+
+.cardUser {
+  border: 1px solid #fdc43f;
+  border-radius: 20px;
+  margin: 1% 0%;
+  background-color: #f6f6f6;
+}
+
+.cardUser .ant-list-item-meta-content h4 {
+  color: #b29168;
+}
+
+.cardUser .correo {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.cardUser .telefono {
+  font-weight: bold;
+}
+
+.cardUser .ant-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 32px !important;
+  border-radius: 32% !important;
+  margin-left: 10px !important;
+}
+
+.cardUser .activo {
+  font-weight: bold;
+  background-color: lightgreen;
+  padding: 0 5px;
+  border-radius: 10px;
+  width: 101px;
+  text-align: center;
+  color: black;
+  border: 1px solid black;
+}
+
+.cardUser .deshabilitado {
+  font-weight: bold;
+  background-color: red;
+  padding: 0 5px;
+  border-radius: 10px;
+  width: 101px;
+  text-align: center;
+  color: white;
+  border: 1px solid black;
+}
+
+.cardUser svg {
+  cursor: pointer;
+}
+
+.cardUser .editar {
+  color: #fdc43f;
+}
+
+.cardUser .eliminar {
+  color: red;
+}
+
+.cardUser .ant-list-item-meta {
+  align-items: center !important;
+}
+
+.tableUser img {
+  width: 300px;
+  height: 300px;
+}
