@@ -12,6 +12,7 @@ import {
   Result
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import Pagination from 'react-bootstrap/Pagination';
 import CardUser from './components/CardUser';
 import './users.css'
 
@@ -52,7 +53,13 @@ const UsersView = () => {
   const urlRol = `http://${document.domain}:3001/roles/`;
   const urlCrearUsuario = `http://${document.domain}:3001/crearUsuario/`;
   const urlBusqueda = `http://${document.domain}:3001/busqueda/`;
-  const bodyUsers = document.getElementById('bodyUsers');
+  const btnSearch = document.querySelector('.contenedor_main .ant-input-search-button');
+
+  let prev_page = document.querySelector(".prev-page");
+  let next_page = document.querySelector(".next-page");
+  let elementos = document.querySelector(".displaying-num");
+  let current_page = document.querySelector(".current_page");
+
   let token = localStorage.getItem("token");
   let headers = new Headers();
   headers.append("Authorization", "Bearer " + token);
@@ -68,8 +75,11 @@ const UsersView = () => {
 
     const res = await fetch(url, requestOptions);
     const data = await res.json();
+    let count = data["cantidad"]
 
-    setUser(data);
+    setUser(data['result']);
+    elementos.innerHTML = `${count} elementos`
+
 
   }
 
@@ -222,69 +232,75 @@ const UsersView = () => {
         <span class="sr-only"></span>
       </div>
       </div>` */
-      console.log(typeof(value))
+
     if (value == '') {
-      getUsers();
-      setDataUser(false)
-    } else {
-
-
-
-
-      setTimeout(() => {
-        setBusqueda({
-          search: value,
-          page: 1
-        });
-
-      }, 3000);
-
-
-
-      console.log(value)
-
-      const requestOptions = {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({
-          ...busqueda
-        })
-      }
-
-      const ruta = urlBusqueda + value;
-
-      console.log(ruta);
-
-      const res = await fetch(ruta, requestOptions);
-      const data = await res.json();
-      let busquedaArr = Object.values(data["result"]);
-
-      if (data["result"].length == 0) {
-        setResult(false)
-      } else {
-        setResult(true)
-      }
-      setDataUser(busquedaArr);
-      setUser(false);
+      getUsers()
+      setDataUser(false);
     }
-    /* 
-        if (data['result'].length == 1) {
-    
-        } else {
-    
-        }
-    
-        if (data['next'] == null) {
-    
-        } else {
-    
-        }
-    
-        if (data['previous'] == null) {
-    
-        } else {
-    
-        } */
+
+    setTimeout(() => {
+      setBusqueda({
+        search: value,
+        page: 1
+      });
+
+      localStorage.setItem('search', value);
+    }, 3000);
+
+
+
+    console.log(isNaN(parseInt(value)))
+
+    const requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        ...busqueda
+      })
+    }
+
+    const ruta = urlBusqueda + value;
+
+    console.log(ruta);
+
+    const res = await fetch(ruta, requestOptions);
+    const data = await res.json();
+    let busquedaArr = Object.values(data["result"]);
+
+    if (data["result"].length == 0) {
+      setResult(false)
+    } else {
+      setResult(true)
+    }
+    setDataUser(busquedaArr);
+    setUser(false);
+
+
+    if (data['result'].length == 1) {
+      elementos.innerHTML = `
+        1 elemento
+      `;
+    } else {
+      elementos.innerHTML = `
+      ${data["count"]} elementos
+    `;
+    }
+
+    //current_page.textContent = data['pages'];
+
+    if (data['next'] == null) {
+      prev_page.setAttribute("style", "display:none");
+    } else {
+      prev_page.removeAttribute("style");
+      prev_page.setAttribute("data-page", `${data["previous"]}`);
+    }
+
+    if (data['previous'] == null) {
+      next_page.setAttribute("style", "display:none");
+    } else {
+      next_page.removeAttribute("style");
+      next_page.setAttribute("data-page", `${data["next"]}`);
+    }
 
 
 
@@ -309,11 +325,22 @@ const UsersView = () => {
     }  */
   }
 
+  const prevNextPage = (e) => {
+
+    /*  let search = localStorage.getItem("search")
+     let page_next_prev = e.target.getAttribute("data-page");
+     onSearchUsers(search); */
+  }
+
   return (
     <div className='contenedor_main'>
       <h1>Usuarios</h1>
 
-      <div className='d-flex justify-content-end'>
+      <div className='d-flex justify-content-around'>
+
+        <Button type="primary" onClick={showModal} className="btnAgregarUsuario">
+          Añadir usuario
+        </Button>
         <Search
           placeholder="input search text"
           onSearch={onSearchUsers}
@@ -321,9 +348,16 @@ const UsersView = () => {
             width: 200,
           }}
           enterButton />
-        <Button type="primary" onClick={showModal} className="btnAgregarUsuario">
-          Añadir usuario
-        </Button>
+
+        <Pagination className='d-flex align-items-center'>
+          <span className="displaying-num m-2"></span>
+          <Pagination.Prev className='prev-page' onClick={prevNextPage} data-page="" />
+
+          <Pagination.Item className='current_page' active>{1}</Pagination.Item>
+
+          <Pagination.Next className='next-page' onClick={prevNextPage} data-page="" />
+
+        </Pagination>
       </div>
 
       <Modal
