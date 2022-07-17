@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../../../../components/style/global.css'
-import CardUser from '../../../users/components/CardUser';
 import '../../../users/users.css';
+import './staff.css';
 import {
   Modal,
   Form,
@@ -14,6 +14,7 @@ import {
   notification,
   Result
 } from 'antd';
+import  CardBarber from '../../components/CardBarber';
 
 const { Search } = Input;
 
@@ -30,8 +31,9 @@ const StaffView = () => {
     type: 'barberos'
   });
 
+  
   let lista = document.querySelector(".lista");
-
+  let elementos = document.querySelector(".displaying-num");
   let token = localStorage.getItem("token");
   let headers = new Headers();
   headers.append("Authorization", "Bearer " + token);
@@ -56,7 +58,7 @@ const StaffView = () => {
     let count = data["cantidad"]
 
     setBarber(data['result']);
-    //elementos.innerHTML = `${count} elementos`
+    elementos.innerHTML = `${count} elementos`
 
 
   }
@@ -122,7 +124,7 @@ const StaffView = () => {
       <div className='contenedor_main'>
         <h1>Barberos</h1>
 
-        <div className='d-flex justify-content-around'>
+        <div className='d-flex justify-content-around mb-3'>
 
           <Search
             placeholder="input search text"
@@ -135,12 +137,12 @@ const StaffView = () => {
           <span className="displaying-num m-2"></span>
         </div>
 
-        <div id='bodyUsers'>
+        <div id='bodyBarbers'>
           <ul className='lista'>
             {!barber ? '' :
 
               barber.map(barber => {
-                return <CardUser
+                return <CardBarber
                   key={barber.id_usuario}
                   nombre={barber.nombre_usuario}
                   correo={barber.correo_usuario}
@@ -158,7 +160,7 @@ const StaffView = () => {
             {!dataBarber ? '' :
 
               dataBarber.map(dataBarber => {
-                return <CardUser
+                return <CardBarber
                   key={dataBarber.id_usuario}
                   nombre={dataBarber.nombre_usuario}
                   correo={dataBarber.correo_usuario}
