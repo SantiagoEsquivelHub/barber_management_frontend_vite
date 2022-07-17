@@ -31,11 +31,11 @@ const UsersView = () => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [busqueda, setBusqueda] = useState({
-    search: '',
-    page: ''
+    page: '',
+    type: 'usuarios'
   });
   const [dataUser, setDataUser] = useState(false);
-  const [result, setResult] = useState({});
+  const [result, setResult] = useState(true);
   const [form] = Form.useForm();
 
   const [datos, setDatos] = useState({
@@ -227,16 +227,11 @@ const UsersView = () => {
 
   const onSearchUsers = async (value) => {
 
-    /*     bodyUsers.innerHTML = `
-        <div class="d-flex justify-content-center align-items-center">
-        <div class="spinner-border text-warning" role="status">
-        <span class="sr-only"></span>
-      </div>
-      </div>` */
 
     if (value == '') {
       getUsers()
       setDataUser(false);
+      setResult(true);
       lista.removeAttribute('style')
     }
 
@@ -271,9 +266,8 @@ const UsersView = () => {
 
     if (data["result"].length == 0) {
       setResult(false)
-    } else {
-      setResult(true)
-    }
+    } 
+
     setDataUser(busquedaArr);
     setUser(false);
     lista.setAttribute('style', 'display:none')

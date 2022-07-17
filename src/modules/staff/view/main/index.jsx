@@ -19,13 +19,18 @@ const { Search } = Input;
 
 const StaffView = () => {
 
-  const urlGetBarbers = `http://${document.domain}:3001/usuarios/`;
+  const urlGetBarbers = `http://${document.domain}:3001/barberos/`;
+  const urlBusquedaBarbers = `http://${document.domain}:3001/busqueda/`;
 
   const [barber, setBarber] = useState(false);
+  const [dataBarber, setDataBarber] = useState(false);
+  const [result, setResult] = useState(true);
   const [busqueda, setBusqueda] = useState({
-    search: '',
-    page: ''
+    page: '',
+    type: 'barberos'
   });
+
+  let lista = document.querySelector(".lista");
 
   let token = localStorage.getItem("token");
   let headers = new Headers();
@@ -56,11 +61,13 @@ const StaffView = () => {
 
   }
 
-  const onSearchUsers = async (value) => {
+  const onSearchBarbers = async (value) => {
 
     if (value == '') {
-      getBarbers()
-      lista.removeAttribute('style')
+      getBarbers();
+      setDataBarber(false);
+      lista.removeAttribute('style');
+      setResult(true);
     }
 
 
@@ -82,7 +89,7 @@ const StaffView = () => {
       })
     }
 
-    const ruta = urlBusqueda + value;
+    const ruta = urlBusquedaBarbers + value;
 
     console.log(ruta);
 
@@ -92,11 +99,9 @@ const StaffView = () => {
 
     if (data["result"].length == 0) {
       setResult(false)
-    } else {
-      setResult(true)
     }
-    setDataUser(busquedaArr);
-    setUser(false);
+    setDataBarber(busquedaArr);
+    setBarber(false);
     lista.setAttribute('style', 'display:none')
 
     if (data['result'].length == 1) {
@@ -121,7 +126,7 @@ const StaffView = () => {
 
           <Search
             placeholder="input search text"
-            onSearch={onSearchUsers}
+            onSearch={onSearchBarbers}
             style={{
               width: 200,
             }}
@@ -149,6 +154,31 @@ const StaffView = () => {
 
             }
           </ul>
+          <ul>
+            {!dataBarber ? '' :
+
+              dataBarber.map(dataBarber => {
+                return <CardUser
+                  key={dataBarber.id_usuario}
+                  nombre={dataBarber.nombre_usuario}
+                  correo={dataBarber.correo_usuario}
+                  telefono={dataBarber.telefono_usuario}
+                  estado={dataBarber.estado_usuario}
+                  url={dataBarber.url_img_usuario}
+                  id={dataBarber.id_usuario}
+                />
+
+              })
+
+            }
+          </ul>
+          <div>
+            {
+              !result ? <Result
+                title="Sin resultados"
+              /> : ''
+            }
+          </div>
         </div>
       </div>
     </>
