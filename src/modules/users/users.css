@@ -56,12 +56,12 @@
   color: rgba(244, 100, 5, 0.5) !important;
 }
 
-.contenedor_main .ant-input:hover{
+.contenedor_main .ant-input:hover {
   border-color: rgba(244, 100, 5, 0.5) !important;
 }
 
 .contenedor_main .ant-result-info .ant-result-icon > .anticon {
-  color: #fdc43f!important;
+  color: #fdc43f !important;
 }
 
 .cardUser {
@@ -95,23 +95,37 @@
 .cardUser .activo {
   font-weight: bold;
   background-color: lightgreen;
-  padding: 0 5px;
+  padding: 5px 5px;
   border-radius: 10px;
-  width: 101px;
+  width: 130px;
   text-align: center;
   color: black;
-  border: 1px solid black;
+  background-image: linear-gradient(
+    to left top,
+    #48bb78,
+    #41c18d,
+    #3ec7a2,
+    #43ccb4,
+    #4fd1c5
+  );
+  color: white;
 }
 
 .cardUser .deshabilitado {
   font-weight: bold;
-  background-color: red;
-  padding: 0 5px;
+  padding: 5px 5px;
   border-radius: 10px;
-  width: 101px;
+  width: 130px;
   text-align: center;
   color: white;
-  border: 1px solid black;
+  background-image: linear-gradient(
+    to left top,
+    #e53e3e,
+    #ec504f,
+    #f26160,
+    #f77170,
+    #fc8181
+  );
 }
 
 .cardUser svg {
@@ -133,4 +147,32 @@
 .imgUser img {
   width: 300px;
   height: 300px;
+}
+
+.contenedor_main .active > .page-link {
+  background-color: transparent !important;
+  color: #fdc43f !important;
+  border-color: rgba(244, 100, 5, 0.5) !important;
+}
+
+.contenedor_main .page-link {
+  background-color: transparent !important;
+  color: #fdc43f !important;
+  border-radius: 0px !important;
+}
+
+.contenedor_main .page-link:hover {
+  background-color: transparent !important;
+  color: #fdc43f !important;
+  border-color: rgba(244, 100, 5, 0.5) !important;
+}
+
+
+.contenedor_main .lista {
+  overflow: auto;
+  height: 80vh;
+}
+
+.contenedor_main .pagination{
+display: none!important;
 }

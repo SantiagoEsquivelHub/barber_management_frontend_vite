@@ -327,7 +327,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                             valuePropName="fileList"
                             getValueFromEvent={normFile}
                             onChange={getUrl2}
-                            rules={[{ required: true, message: "Este campo es obligatorio" }]}
+                   
 
                         >
                             <Upload name="url_img_usuario2" listType="picture" {...props} maxCount={1} id="url_img_usuario2" accept="image/png, image/jpeg, image/jpg">
@@ -339,10 +339,10 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                     <Row className='col-12 d-flex flex-column align-items-center'>
                         <div className='d-flex justify-content-center'>
                             <Col span={12} className="m-3">
-                                <Form.Item name="nombre_usuario" label="Nombre" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
+                                <Form.Item name="nombre_usuario" label="Nombre" className="d-flex flex-column">
                                     <Input type="text" onChange={handleInputChange2} name="nombre_usuario" />
                                 </Form.Item>
-                                <Form.Item name="estado_usuario" label="Estado" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
+                                <Form.Item name="estado_usuario" label="Estado" className="d-flex flex-column">
 
 
                                     <Select required
@@ -361,7 +361,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                                 </Form.Item>
                             </Col>
                             <Col span={12} className="m-3">
-                                <Form.Item name="telefono_usuario" label="Teléfono" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column" id="telefono_usuario">
+                                <Form.Item name="telefono_usuario" label="Teléfono" className="d-flex flex-column" id="telefono_usuario">
                                     <Input type="text" onChange={handleInputChange2} name="telefono_usuario" />
                                 </Form.Item>
                             </Col>

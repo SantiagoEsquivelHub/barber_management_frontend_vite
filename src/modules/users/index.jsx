@@ -59,6 +59,7 @@ const UsersView = () => {
   let next_page = document.querySelector(".next-page");
   let elementos = document.querySelector(".displaying-num");
   let current_page = document.querySelector(".current_page");
+  let lista = document.querySelector(".lista");
 
   let token = localStorage.getItem("token");
   let headers = new Headers();
@@ -236,16 +237,17 @@ const UsersView = () => {
     if (value == '') {
       getUsers()
       setDataUser(false);
+      lista.removeAttribute('style')
     }
 
-    setTimeout(() => {
+   
       setBusqueda({
         search: value,
         page: 1
       });
 
       localStorage.setItem('search', value);
-    }, 3000);
+   
 
 
 
@@ -274,7 +276,7 @@ const UsersView = () => {
     }
     setDataUser(busquedaArr);
     setUser(false);
-
+    lista.setAttribute('style', 'display:none')
 
     if (data['result'].length == 1) {
       elementos.innerHTML = `
@@ -443,7 +445,7 @@ const UsersView = () => {
       </Modal>
 
       <div id='bodyUsers'>
-        <ul className=''>
+        <ul className='lista'>
           {!user ? '' :
 
             user.map(user => {
