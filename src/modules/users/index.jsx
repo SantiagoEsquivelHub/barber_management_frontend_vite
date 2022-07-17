@@ -332,7 +332,7 @@ const UsersView = () => {
     <div className='contenedor_main'>
       <h1>Usuarios</h1>
 
-      <div className='d-flex justify-content-around'>
+      <div className='d-flex justify-content-around mb-3'>
 
         <Button type="primary" onClick={showModal} className="btnAgregarUsuario">
           Añadir usuario
