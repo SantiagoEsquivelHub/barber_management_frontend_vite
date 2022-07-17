@@ -240,14 +240,14 @@ const UsersView = () => {
       lista.removeAttribute('style')
     }
 
-   
-      setBusqueda({
-        search: value,
-        page: 1
-      });
 
-      localStorage.setItem('search', value);
-   
+    setBusqueda({
+      search: value,
+      page: 1
+    });
+
+    localStorage.setItem('search', value);
+
 
 
 
@@ -351,6 +351,7 @@ const UsersView = () => {
           }}
           enterButton />
 
+        <span className="displaying-num m-2"></span>
         <Pagination className='d-flex align-items-center'>
           <span className="displaying-num m-2"></span>
           <Pagination.Prev className='prev-page' onClick={prevNextPage} data-page="" />
