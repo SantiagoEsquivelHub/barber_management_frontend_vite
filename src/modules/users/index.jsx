@@ -110,7 +110,7 @@ const UsersView = () => {
     setVisible(true);
   };
 
-  const handleOk = async (e, form) => {
+  const handleOk = async (e) => {
 
     const requestOptions = {
       method: 'POST',
