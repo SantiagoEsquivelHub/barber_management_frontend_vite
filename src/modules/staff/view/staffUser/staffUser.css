@@ -33,3 +33,18 @@
   border: 1px solid #b29168b6 !important;
   box-shadow: -1px 0px 15px -1px rgba(0, 0, 0, 0.2) !important;
 }
+
+.btnAgregarCita{
+    border-color: rgba(244, 100, 5, 0.5) !important;
+    background: transparent !important;
+    color: rgba(244, 100, 5, 0.5) !important;
+    border-radius: 20px !important;
+}
+
+.cardBarber .ant-list-item-meta-title > a {
+    color: #b29168 !important;
+  }
+
+  .precio_interna{
+    margin-top: 2rem!important;
+  }
