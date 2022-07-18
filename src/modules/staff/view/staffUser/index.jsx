@@ -43,6 +43,7 @@ const StaffUserView = () => {
 
   const urlVerUsuario = `http://${document.domain}:3001/usuarios/`;
   const urlServicios = `http://${document.domain}:3001/servicio/`;
+  const urlCrearCita = `http://${document.domain}:3001/crearCita/`;
 
   let token = localStorage.getItem("token");
   let headers2 = new Headers();
@@ -139,19 +140,20 @@ const StaffUserView = () => {
     console.log(precio)
   };
 
-  const handleOk = async (e) => {
+  const handleSubmitCitas = async (e) => {
 
     const requestOptions = {
       method: 'POST',
-      headers: headers,
+      headers: headers2,
       body: JSON.stringify({
         ...datos
       }
       )
-
     }
 
-    const res = await fetch(urlCrearUsuario, requestOptions);
+    console.log(datos)
+
+    const res = await fetch(urlCrearCita, requestOptions);
     //console.log(res)
     openNotificationWithIcon('success');
 
@@ -163,6 +165,14 @@ const StaffUserView = () => {
       window.location.reload();
     }, 3000);
 
+  };
+
+  const openNotificationWithIcon = (type) => {
+    notification[type]({
+      message: '¡Cita creada correctamente!',
+      description:
+        'Los datos de la cita han sido ingresados :)',
+    });
   };
 
 
@@ -182,7 +192,7 @@ const StaffUserView = () => {
                   </Card.Text>
                   <Card.Text className='d-flex justify-content-evenly align-items-center'>
                     <p>Estado</p>
-                    <p className='estado_interna'>{internaBarber.nombre_estado == null || internaBarber.nombre_estado == undefined ? 'Sin información' : internaBarber.nombre_estado}</p>
+                    <p className={internaBarber.nombre_estado == 'Activo' ? 'activo' : 'deshabilitado'}>{internaBarber.nombre_estado == null || internaBarber.nombre_estado == undefined ? 'Sin información' : internaBarber.nombre_estado}</p>
                   </Card.Text>
 
                 </Card.Body>
@@ -281,7 +291,7 @@ const StaffUserView = () => {
         ]}
       >
 
-        <Form {...layout} form={form} name="crearUsuario" className="crearUsuario" id="crearUsuario" onFinish={handleOk}>
+        <Form {...layout} form={form} name="crearUsuario" className="crearUsuario" id="crearUsuario" onFinish={handleSubmitCitas}>
 
           <Row className='col-12 d-flex flex-column align-items-center'>
             <div className='d-flex justify-content-center'>
@@ -311,7 +321,7 @@ const StaffUserView = () => {
               </Col>
               <Col span={12} className="m-3">
                 <Form.Item name="fecha_cita" label="Fecha cita" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
-                  <Input type="date" onChange={handleInputChange} name="fecha_cita" />
+                  <Input type="datetime-local" onChange={handleInputChange} name="fecha_cita" />
                 </Form.Item>
 
                 {
@@ -329,7 +339,7 @@ const StaffUserView = () => {
           <Button htmlType="button" onClick={onReset}>
             Reset
           </Button>
-          <Button type="primary" htmlType="submit" loading={loading} className="btnCrearUsuario">
+          <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita">
             Registar
           </Button>
         </Form.Item>
