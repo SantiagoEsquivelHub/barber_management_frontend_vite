@@ -70,7 +70,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             onReset();
             localStorage.removeItem('idUser');
             window.location.reload();
-        }, 3000);
+        }, 1000);
 
     }
 
@@ -93,7 +93,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         setTimeout(() => {
             //localStorage.removeItem('idUser');
             window.location.reload();
-        }, 3000);
+        }, 1000);
 
     }
 

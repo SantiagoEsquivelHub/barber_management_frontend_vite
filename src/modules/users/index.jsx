@@ -132,7 +132,7 @@ const UsersView = () => {
       setVisible(false);
       onReset();
       window.location.reload();
-    }, 3000);
+    }, 1000);
 
   };
 
