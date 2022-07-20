@@ -16,7 +16,6 @@ import {
 import Card from 'react-bootstrap/Card';
 import './staffUser.css';
 import { Timeline } from 'antd';
-//import {Bar} from 'react-chartjs-2';
 
 const { Meta } = Card;
 const { Option } = Select;
@@ -31,6 +30,7 @@ const layout = {
 const StaffUserView = () => {
 
   let params = useParams();
+  const [historial, setHistorial] = useState(false);
   const [statistics, setStatistics] = useState({
     day: '',
     month: '',
@@ -53,6 +53,7 @@ const StaffUserView = () => {
   const urlCrearCita = `http://${document.domain}:3001/crearCita/`;
   const urlEditarBarbero = `http://${document.domain}:3001/editarUsuario/`;
   const urlHistorial = `http://${document.domain}:3001/crearHistorial/`;
+  const urlObtHistorial = `http://${document.domain}:3001/crearHistorial/`;
   const urlIdCita = `http://${document.domain}:3001/idCita/`;
   const btnSubmitCita = document.querySelector('.btnCrearCita');
   const urlDay = `http://${document.domain}:3001/serviciosHoy/`;
@@ -100,7 +101,7 @@ const StaffUserView = () => {
 
 
   useEffect(() => {
-    
+
     getInterna(params.id);
     getServicios();
     getStatistics();
@@ -307,6 +308,15 @@ const StaffUserView = () => {
     })
   }
 
+  const getHistorial = () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: headers2,
+    }
+
+    let res = await fetch(urlObtHistorial + params.id, requestOptions);
+    console.log(res)
+  }
 
 
   return (
@@ -383,38 +393,25 @@ const StaffUserView = () => {
                     </Button>
 
                   </div>
-                  <Timeline>
-                    <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                    <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                    <Timeline.Item color="red">
-                      <p>Solve initial network problems 1</p>
-                      <p>Solve initial network problems 2</p>
-                      <p>Solve initial network problems 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item>
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="gray">
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="gray">
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="#00CCFF">
-                      <p>Custom color testing</p>
-                    </Timeline.Item>
-                  </Timeline>
                 </Card.Body>
               </Card>
             </div>
           </div>
       }
+      <Timeline>
+        {!historial ? 'Cargando...' :
+
+          historial.map((historial) => {
+            return <Timeline.Item color="yellow">
+              <p>{historial.nombre_servicio}</p>
+              <p>{historial.fecha_cita}</p>
+              <p>{historial.precio_servicio}</p>
+            </Timeline.Item>
+
+          })
+
+        }
+      </Timeline>
 
       <Modal
         visible={visible}
