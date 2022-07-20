@@ -70,7 +70,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             onReset();
             localStorage.removeItem('idUser');
             window.location.reload();
-        }, 3000);
+        }, 1000);
 
     }
 
@@ -91,9 +91,9 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
         setLoading(true);
         setTimeout(() => {
-            localStorage.removeItem('idUser');
+            //localStorage.removeItem('idUser');
             window.location.reload();
-        }, 3000);
+        }, 1000);
 
     }
 
@@ -119,15 +119,12 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
         let idUser = e.target.id;
         localStorage.setItem('idUser', idUser);
-        console.log(idUser);
         setVisible(true);
+        return idUser;
     }
 
     const getIdDelete = (e) => {
-        console.log(e.target);
         let idUserDel = e.target.id;
-        localStorage.setItem('idUserDel', idUserDel);
-        console.log(idUserDel);
         return idUserDel;
     }
 

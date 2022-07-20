@@ -30,7 +30,12 @@ const layout = {
 const StaffUserView = () => {
 
   let params = useParams();
-
+  const [historial, setHistorial] = useState(false);
+  const [statistics, setStatistics] = useState({
+    day: '',
+    month: '',
+    avg: ''
+  });
   const [internaBarber, setInternaBarber] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,6 +52,13 @@ const StaffUserView = () => {
   const urlServicios = `http://${document.domain}:3001/servicio/`;
   const urlCrearCita = `http://${document.domain}:3001/crearCita/`;
   const urlEditarBarbero = `http://${document.domain}:3001/editarUsuario/`;
+  const urlHistorial = `http://${document.domain}:3001/crearHistorial/`;
+  const urlObtHistorial = `http://${document.domain}:3001/crearHistorial/`;
+  const urlIdCita = `http://${document.domain}:3001/idCita/`;
+  const btnSubmitCita = document.querySelector('.btnCrearCita');
+  const urlDay = `http://${document.domain}:3001/serviciosHoy/`;
+  const urlMonth = `http://${document.domain}:3001/serviciosMes/`;
+  const urlAvg = `http://${document.domain}:3001/serviciosPromedio/`;
 
   let token = localStorage.getItem("token");
   let headers2 = new Headers();
@@ -89,8 +101,12 @@ const StaffUserView = () => {
 
 
   useEffect(() => {
+
     getInterna(params.id);
     getServicios();
+    getStatistics();
+    console.log(statistics)
+
   }, [])
 
   const handleCancel = () => {
@@ -154,10 +170,12 @@ const StaffUserView = () => {
       )
     }
 
-    console.log(datos)
+    let idBarber = btnSubmitCita.id;
 
-    const res = await fetch(urlCrearCita, requestOptions);
-    //console.log(res)
+    const cita = await fetch(urlCrearCita, requestOptions);
+    const resp = await getIdCita();
+    const historia = await createHistorial(idBarber, resp[0].id_cita)
+    //console.log(historia)
     openNotificationWithIcon('success');
 
     setLoading(true);
@@ -166,7 +184,7 @@ const StaffUserView = () => {
       setVisible(false);
       onReset();
       window.location.reload();
-    }, 3000);
+    }, 1000);
 
   };
 
@@ -207,13 +225,13 @@ const StaffUserView = () => {
       )
     }
 
- 
+
     const res = await fetch(urlEditarBarbero + idBarber, requestOptions);
     openNotificationBarberUpdated('success');
 
     setTimeout(() => {
       window.location.reload();
-    }, 3000);
+    }, 1000);
 
   }
 
@@ -235,12 +253,76 @@ const StaffUserView = () => {
     });
   };
 
+  const getIdCita = async () => {
+    console.log(datos)
+    const requestOptions = {
+      method: 'POST',
+      headers: headers2,
+      body: JSON.stringify({
+        ...datos
+      })
+    }
+
+    const res = await fetch(urlIdCita, requestOptions);
+    const data = res.json();
+
+    return data;
+  }
+
+  const createHistorial = async (idBarber, idCita) => {
+
+    const requestOptions = {
+      method: 'POST',
+      headers: headers2,
+      body: JSON.stringify({
+        id_usuario: `${idBarber}`,
+        id_cita: `${idCita}`
+      }
+      )
+    }
+
+    const res = await fetch(urlHistorial, requestOptions);
+
+  }
+
+  const getStatistics = async () => {
+
+    const requestOptions = {
+      method: 'GET',
+      headers: headers2,
+    }
+
+    let resDay = await fetch(urlDay + params.id, requestOptions);
+    let dataDay = await resDay.json();
+
+    let resMonth = await fetch(urlMonth + params.id, requestOptions);
+    let dataMonth = await resMonth.json();
+
+    let resAvg = await fetch(urlAvg + params.id, requestOptions);
+    let dataAvg = await resAvg.json();
+
+    setStatistics({
+      day: dataDay,
+      month: dataMonth,
+      avg: dataAvg
+    })
+  }
+
+  const getHistorial = () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: headers2,
+    }
+
+    let res = await fetch(urlObtHistorial + params.id, requestOptions);
+    console.log(res)
+  }
 
 
   return (
     <div className='contenedor_main'>
       {
-        !internaBarber ? 'Cargando...' :
+        !internaBarber && statistics ? 'Cargando...' :
 
           <div>
             <div className='d-flex align-items-center justify-content-around'>
@@ -261,28 +343,30 @@ const StaffUserView = () => {
 
                 </Card.Body>
               </Card>
+
+
               <div className='d-flex flex-column col-6'>
                 <div className='d-flex justify-content-center align-items-center'>
                   <Card className='m-3 col-4' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
+                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.day}</div>
+                      <Card.Text className='d-flex justify-content-center align-items-center card_text'>
                         Citas registradas hoy
                       </Card.Text>
                     </Card.Body>
                   </Card>
                   <Card className='m-3 col-4' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
+                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.month}</div>
+                      <Card.Text className='d-flex justify-content-center align-items-center card_text'>
                         Total de servicios en el mes
                       </Card.Text>
                     </Card.Body>
                   </Card>
                   <Card className='m-3 col-4' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
+                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.avg}</div>
+                      <Card.Text className='d-flex justify-content-center align-items-center card_text'>
                         Promedio de servicios por día
                       </Card.Text>
                     </Card.Body>
@@ -292,10 +376,7 @@ const StaffUserView = () => {
                 <div>
                   <Card className='m-3 col-12' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
-                        Promedio de servicios por día
-                      </Card.Text>
+                      {/* //<Bar /> */}
                     </Card.Body>
                   </Card>
                 </div>
@@ -307,42 +388,30 @@ const StaffUserView = () => {
                 <Card.Body>
                   <div className='d-flex align-items-center justify-content-between mb-2'>
                     <Card.Title className=''>Historial</Card.Title>
-                    <Button type="primary" className="btnAgregarCita" onClick={showModal}>
+                    <Button type="primary" className={internaBarber.nombre_estado == 'Activo' ? 'btnAgregarCita' : 'ocultar'} onClick={showModal} >
                       Registrar cita
                     </Button>
+
                   </div>
-                  <Timeline>
-                    <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                    <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                    <Timeline.Item color="red">
-                      <p>Solve initial network problems 1</p>
-                      <p>Solve initial network problems 2</p>
-                      <p>Solve initial network problems 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item>
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="gray">
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="gray">
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="#00CCFF">
-                      <p>Custom color testing</p>
-                    </Timeline.Item>
-                  </Timeline>
                 </Card.Body>
               </Card>
             </div>
           </div>
       }
+      <Timeline>
+        {!historial ? 'Cargando...' :
+
+          historial.map((historial) => {
+            return <Timeline.Item color="yellow">
+              <p>{historial.nombre_servicio}</p>
+              <p>{historial.fecha_cita}</p>
+              <p>{historial.precio_servicio}</p>
+            </Timeline.Item>
+
+          })
+
+        }
+      </Timeline>
 
       <Modal
         visible={visible}
@@ -403,7 +472,7 @@ const StaffUserView = () => {
               <Button htmlType="button" onClick={onReset}>
                 Reset
               </Button>
-              <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita">
+              <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita" id={internaBarber.id_usuario}>
                 Registar
               </Button>
             </Form.Item>
