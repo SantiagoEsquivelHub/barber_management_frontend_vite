@@ -1,0 +1,89 @@
+.card_info {
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background: #fdc43f;
+  text-align: center;
+  margin: 0px auto;
+  padding: 3%;
+}
+
+.img_interna {
+  width: 50%;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 1px solid #fdc43f;
+}
+
+.estado_interna {
+  border: 1px solid black;
+  padding: 1% 2%;
+  border-radius: 10px;
+  background: #fdc43f;
+}
+
+.timeline_interna {
+  overflow: auto;
+  height: 50vh;
+}
+
+.card {
+  border: 1px solid #b29168b6 !important;
+  box-shadow: -1px 0px 15px -1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btnAgregarCita {
+  border-color: rgba(244, 100, 5, 0.5) !important;
+  background: transparent !important;
+  color: rgba(244, 100, 5, 0.5) !important;
+  border-radius: 20px !important;
+}
+
+.cardBarber .ant-list-item-meta-title > a {
+  color: #b29168 !important;
+}
+
+.precio_interna {
+  margin-top: 2rem !important;
+}
+
+.activo {
+  font-weight: bold;
+  background-color: lightgreen;
+  padding: 5px 5px;
+  border-radius: 10px;
+  width: 130px;
+  text-align: center;
+  color: black;
+  background-image: linear-gradient(
+    to left top,
+    #48bb78,
+    #41c18d,
+    #3ec7a2,
+    #43ccb4,
+    #4fd1c5
+  );
+  color: white;
+}
+
+.deshabilitado {
+  font-weight: bold;
+  padding: 5px 5px;
+  border-radius: 10px;
+  width: 130px;
+  text-align: center;
+  color: white;
+  background-image: linear-gradient(
+    to left top,
+    #e53e3e,
+    #ec504f,
+    #f26160,
+    #f77170,
+    #fc8181
+  );
+}
+
+.editar {
+  color: #fdc43f;
+}

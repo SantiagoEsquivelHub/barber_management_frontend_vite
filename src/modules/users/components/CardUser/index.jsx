@@ -12,6 +12,7 @@ import {
     notification
 } from 'antd';
 
+const { Option } = Select;
 
 const layout = {
     labelCol: { span: 20 },
@@ -23,10 +24,11 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
     const { confirm } = Modal;
 
 
-    const [user, setUser] = useState(false);
+    const [users, setUsers] = useState(false);
     const [rol, setRol] = useState(false);
     const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [visibleVerUsuario, setVisibleVerUsuario] = useState(false)
     const [form] = Form.useForm();
 
     const [datos, setDatos] = useState({
@@ -36,62 +38,29 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         url_img_usuario: ''
     })
 
-    const urlEditarUsuario = `http://${document.domain}:3001/roles/`;
-    const urlEliminarUsuario = `http://${document.domain}:3001/usuario/`;
+    const urlVerUsuario = `http://${document.domain}:3001/usuarios/`;
+    const urlEditarUsuario = `http://${document.domain}:3001/editarUsuario/`;
+    const urlEliminarUsuario = `http://${document.domain}:3001/eliminarUsuario/`;
 
     let token = localStorage.getItem("token");
-    let headers = new Headers();
-    headers.append("Authorization", "Bearer " + token);
-    headers.append("Content-type", "application/json");
+    let headers2 = new Headers();
+    headers2.append("Authorization", "Bearer " + token);
+    headers2.append("Content-type", "application/json");
+    headers2.append("Access-Control-Allow-Origin", "*")
 
-
-    const getUsers = async (e) => {
-
-        const requestOptions = {
-            method: 'GET',
-            headers: headers,
-        }
-
-        const res = await fetch(url, requestOptions);
-        const data = await res.json();
-
-        setUser(data);
-
-    }
-
-    const getRoles = async (e) => {
-
-        const requestOptions = {
-            method: 'GET',
-            headers: headers,
-        }
-
-        const res = await fetch(urlRol, requestOptions);
-        const data = await res.json();
-        //console.log("roles", data);
-        setRol(data);
-
-    }
-
-
-    const showModal = () => {
-        setVisible(true);
-    };
-
-    const handleOk = async (e, form) => {
+    const updateUsers = async (e) => {
+        let idUser = localStorage.getItem('idUser');
 
         const requestOptions = {
             method: 'POST',
-            headers: headers,
+            headers: headers2,
             body: JSON.stringify({
                 ...datos
             }
             )
-
         }
 
-        const res = await fetch(urlCrearUsuario, requestOptions);
-        console.log(res)
+        const res = await fetch(urlEditarUsuario + idUser, requestOptions);
         openNotificationWithIcon('success');
 
         setLoading(true);
@@ -99,10 +68,68 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             setLoading(false);
             setVisible(false);
             onReset();
+            localStorage.removeItem('idUser');
             window.location.reload();
         }, 3000);
 
-    };
+    }
+
+
+
+    const deleteUsers = async (idUserDel) => {
+
+        const requestOptions = {
+            method: 'POST',
+            headers: headers2,
+        }
+
+        const ruta = urlEliminarUsuario + idUserDel;
+        console.log(ruta)
+        const res = await fetch(ruta, requestOptions);
+
+        openNotificationWithIconDelete('success');
+
+        setLoading(true);
+        setTimeout(() => {
+            localStorage.removeItem('idUser');
+            window.location.reload();
+        }, 3000);
+
+    }
+
+
+    const getUsers = async (idUserVer) => {
+
+        const requestOptions = {
+            method: 'GET',
+            headers: headers2,
+        }
+
+        const ruta = urlVerUsuario + idUserVer;
+        console.log(ruta);
+        const res = await fetch(ruta, requestOptions);
+        const data = await res.json();
+        console.log(data[0]);
+        setUsers(data[0]);
+        localStorage.removeItem('idUserVer');
+
+    }
+
+    const getId = (e) => {
+
+        let idUser = e.target.id;
+        localStorage.setItem('idUser', idUser);
+        console.log(idUser);
+        setVisible(true);
+    }
+
+    const getIdDelete = (e) => {
+        console.log(e.target);
+        let idUserDel = e.target.id;
+        localStorage.setItem('idUserDel', idUserDel);
+        console.log(idUserDel);
+        return idUserDel;
+    }
 
     const handleCancel = () => {
         setVisible(false);
@@ -122,7 +149,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
     };
 
 
-    const handleInputChange = (e) => {
+    const handleInputChange2 = (e) => {
 
         setDatos({
             ...datos,
@@ -139,18 +166,41 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         },
     }
 
-    const getUrl = async () => {
-        const fileInput = document.getElementById('url_img_usuario');
-        const selectedFile = fileInput.files[0];
+    const getUrl2 = async () => {
 
-        let result = await getBase64(selectedFile);
-        let url = result;
+        const fileInput = document.getElementById('url_img_usuario2');
+        const selectedFile = fileInput.files[0];
+        const btn = document.getElementsByClassName('btnEditarUsuario');
+
+        if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
+            //console.log('LLEGO');
+            alert("Solo se permiten imágenes en PDF, JPG y JPEG")
+            fileInput.value = "";
+            //console.log(btn[0])
+            btn[0].setAttribute('disabled', 'true');
+        } else {
+            btn[0].removeAttribute('disabled');
+            let result = await getBase64(selectedFile);
+            let url = result;
+            //console.log(url)
+            setDatos({
+                ...datos,
+                ['url_img_usuario']: url
+            })
+        }
+
+
+    }
+
+    const handleSelectChange = (value) => {
 
         setDatos({
             ...datos,
-            [fileInput.id]: url
+            ['estado_usuario']: value
         })
-    }
+
+
+    };
 
 
     const getBase64 = (file) =>
@@ -166,16 +216,43 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     const openNotificationWithIcon = (type) => {
         notification[type]({
-            message: '¡Usuario creado correctamente!',
+            message: '¡Usuario actualizado correctamente!',
             description:
-                'Los datos ingresados son correctos :)',
+                'Los datos ingresados han sido recibidos :)',
+        });
+    };
+
+    const openNotificationWithIconDelete = (type) => {
+        notification[type]({
+            message: '¡Usuario eliminado correctamente!',
+            description:
+                'El usuario ha sido desterrado :)',
         });
     };
 
 
+    const openUser = (e) => {
+
+        let idUserVer = e.target.id;
+        localStorage.setItem('idUserVer', idUserVer);
+
+        console.log(idUserVer);
+
+        getUsers(idUserVer);
+
+        setVisibleVerUsuario(true)
+
+    }
+
+    const handleOkUser = () => {
+        setVisibleVerUsuario(false);
+    };
 
 
-    const showDeleteConfirm = () => {
+    const showDeleteConfirm = async (e) => {
+
+        let idUserDel = getIdDelete(e);
+
         confirm({
             title: '¿Estás seguro de eliminar este usuario?',
             icon: <ExclamationCircleOutlined />,
@@ -184,7 +261,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             okType: 'danger',
             cancelText: 'No',
             onOk() {
-                console.log('OK');
+                deleteUsers(idUserDel);
             },
         });
     };
@@ -192,7 +269,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     return (
         <>
-            <div id={id}>
+            <div id={id} className="cardUser">
 
                 <li class="ant-list-item"><div class="ant-list-item-meta">
                     <div class="ant-list-item-meta-avatar">
@@ -201,26 +278,30 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                         </span>
                     </div>
                     <div class="ant-list-item-meta-content">
-                        <h4 class="ant-list-item-meta-title">
-                            <a >{nombre}</a>
+                        <h4 class="ant-list-item-meta-title" >
+                            <a onClick={openUser} id={id}>{nombre}</a>
                         </h4>
                     </div>
                     <div class="ant-list-item-meta-content">
-                        <div class="ant-list-item-meta-description">{correo}</div>
+                        <div class="ant-list-item-meta-description correo">{correo}</div>
                     </div>
                     <div class="ant-list-item-meta-content">
-                        <div class="ant-list-item-meta-description">{telefono}</div>
+                        <div class="ant-list-item-meta-description telefono">{telefono}</div>
                     </div>
                 </div>
-                    <div>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
+                    <div className={estado == 1 ? 'activo' : 'deshabilitado'}>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
                     <ul class="ant-list-item-action">
-                        <li onClick={showModal}>
-                            <a><EditOutlined /></a>
-                            <em class="ant-list-item-action-split">
-                            </em>
+                        <li>
+                            <div >
+                                {/* <EditOutlined className={id}/> */}
+                                <svg className='editar' onClick={getId} id={id} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={id} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
+                                {/*    <FontAwesomeIcon icon="fa-solid fa-user-pen" id={id}/> */}
+                            </div>
                         </li>
-                        <li onClick={showDeleteConfirm}>
-                            <a ><DeleteOutlined /></a>
+                        <li>
+                            <div>
+                                <svg className='eliminar' onClick={showDeleteConfirm} id={id} viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true" data-darkreader-inline-fill="" ><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
+                            </div>
                         </li>
                     </ul>
                 </li>
@@ -237,18 +318,19 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                 ]}
             >
 
-                <Form {...layout} form={form} name="editarUsuario" className="editarUsuario" id="editarUsuario" onFinish={handleOk}>
+                <Form {...layout} form={form} name="editarUsuario" className="editarUsuario" id="editarUsuario" onFinish={updateUsers}>
 
                     <Row className='d-flex align-items-center justify-content-center foto_perfil'>
                         <Form.Item
-                            name="url_img_usuario"
+                            name="url_img_usuario2"
                             label=""
                             valuePropName="fileList"
                             getValueFromEvent={normFile}
-                            onChange={getUrl}
-                            rules={[{ required: true }]}
+                            onChange={getUrl2}
+                   
+
                         >
-                            <Upload name="url_img_usuario" listType="picture" {...props} maxCount={1} id="url_img_usuario" >
+                            <Upload name="url_img_usuario2" listType="picture" {...props} maxCount={1} id="url_img_usuario2" accept="image/png, image/jpeg, image/jpg">
                                 <Button icon={<UploadOutlined />}>Foto de perfil</Button>
                             </Upload>
                         </Form.Item>
@@ -257,14 +339,15 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                     <Row className='col-12 d-flex flex-column align-items-center'>
                         <div className='d-flex justify-content-center'>
                             <Col span={12} className="m-3">
-                                <Form.Item name="nombre_usuario" label="Nombre" rules={[{ required: true }]} className="d-flex flex-column">
-                                    <Input type="text" onChange={handleInputChange} name="nombre_usuario" />
+                                <Form.Item name="nombre_usuario" label="Nombre" className="d-flex flex-column">
+                                    <Input type="text" onChange={handleInputChange2} name="nombre_usuario" />
                                 </Form.Item>
-                                <Form.Item name="nombre_usuario" label="Estado" rules={[{ required: true }]} className="d-flex flex-column">
+                                <Form.Item name="estado_usuario" label="Estado" className="d-flex flex-column">
 
 
                                     <Select required
                                         defaultValue='Seleccione:'
+                                        onChange={handleSelectChange}
                                         placeholder=""
                                         allowClear
                                         name="estado_usuario"
@@ -278,8 +361,8 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                                 </Form.Item>
                             </Col>
                             <Col span={12} className="m-3">
-                                <Form.Item name="telefono_usuario" label="Teléfono" rules={[{ required: true }]} className="d-flex flex-column">
-                                    <Input type="text" onChange={handleInputChange} name="telefono_usuario" />
+                                <Form.Item name="telefono_usuario" label="Teléfono" className="d-flex flex-column" id="telefono_usuario">
+                                    <Input type="text" onChange={handleInputChange2} name="telefono_usuario" />
                                 </Form.Item>
                             </Col>
                         </div>
@@ -288,16 +371,84 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                         <Form.Item >
                             <Button htmlType="button" onClick={onReset}>
                                 Reset
-                            </Button>,
-                            <Button type="primary" htmlType="submit" loading={loading}>
+                            </Button>
+                            <Button type="primary" htmlType="submit" loading={loading} className="btnEditarUsuario">
                                 Actualizar
                             </Button>
                         </Form.Item>
                     </div>
                 </Form>
             </Modal>
+
+
+            <Modal
+                visible={visibleVerUsuario}
+                title="Ver usuario"
+                onCancel={handleOkUser}
+                width="800px"
+                footer={[
+
+                ]}
+            >
+
+
+
+
+                {
+                    !users ? 'Cargando...' :
+                        <>
+                            <div className='d-flex justify-content-center align-items-center imgUser m-2'>
+                                <img src={users.url_img_usuario} />
+                            </div>
+                            <table className='tableUser table table-bordered'>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Campo</th>
+                                        <th scope="col">Información</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr>
+                                        <td>Nombre</td>
+                                        <td>{users.nombre_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Documento</td>
+                                        <td>{users.documento_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Correo</td>
+                                        <td>{users.correo_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Teléfono</td>
+                                        <td>{users.telefono_usuario == null ? 'Sin información' : users.telefono_usuario}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fecha de nacimiento</td>
+                                        <td>{users.fecha_nacimiento_usuario == null ? 'Sin información' : users.fecha_nacimiento_usuario.split('T')[0]}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rol</td>
+                                        <td>{users.nombre_rol == null ? 'Sin información' : users.nombre_rol}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estado</td>
+                                        <td>{users.nombre_estado == null || users.nombre_estado == undefined ? 'Sin información' : users.nombre_estado}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </>
+                }
+
+            </Modal>
+
         </>
     )
+
 }
 
 export default CardUser;
+

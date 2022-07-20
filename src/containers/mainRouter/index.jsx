@@ -12,7 +12,7 @@ const MainRouter = ({ location }) => {
 
     const [token, setToken] = useState();
     const tokenLocal = localStorage.getItem('token');
-    if (!token && tokenLocal == '') {
+    if (!token && tokenLocal == undefined) {
       return <LoginView setToken={setToken} />
     }
 
