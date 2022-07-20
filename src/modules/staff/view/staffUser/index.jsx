@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import {
   Modal,
   Form,
@@ -19,6 +20,7 @@ import { Timeline } from 'antd';
 const { Meta } = Card;
 const { Option } = Select;
 const { Search } = Input;
+const { confirm } = Modal;
 
 const layout = {
   labelCol: { span: 20 },
@@ -44,6 +46,7 @@ const StaffUserView = () => {
   const urlVerUsuario = `http://${document.domain}:3001/usuarios/`;
   const urlServicios = `http://${document.domain}:3001/servicio/`;
   const urlCrearCita = `http://${document.domain}:3001/crearCita/`;
+  const urlEditarBarbero = `http://${document.domain}:3001/editarUsuario/`;
 
   let token = localStorage.getItem("token");
   let headers2 = new Headers();
@@ -175,6 +178,64 @@ const StaffUserView = () => {
     });
   };
 
+  const openNotificationBarberUpdated = (type) => {
+    notification[type]({
+      message: '¡Estado del barbero actualizado correctamente!',
+
+    });
+  };
+
+  const getId = (e) => {
+
+    let idUser = e.target.id;
+    return idUser;
+  }
+
+  const updateBarber = async (idBarber, estado) => {
+
+
+    const requestOptions = {
+      method: 'POST',
+      headers: headers2,
+      body: JSON.stringify({
+        nombre_usuario: '',
+        telefono_usuario: '',
+        url_img_usuario: '',
+        estado_usuario: estado == 'Activo' ? '0' : '1'
+
+      }
+      )
+    }
+
+ 
+    const res = await fetch(urlEditarBarbero + idBarber, requestOptions);
+    openNotificationBarberUpdated('success');
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+
+  }
+
+  const showUpdateBarberConfirm = async (e, estado) => {
+
+    let idBarber = getId(e);
+    let title = estado == 'Activo' ? '¿Deseas cambiar el estado a Deshabilitado?' : '¿Deseas cambiar el estado a Activo?'
+
+    confirm({
+      title: title,
+      icon: <InfoCircleOutlined />,
+      content: 'Tranquilo, este cambio no es permanente :) ',
+      okText: 'Sí',
+      okType: 'info',
+      cancelText: 'No',
+      onOk() {
+        updateBarber(idBarber, estado);
+      },
+    });
+  };
+
+
 
   return (
     <div className='contenedor_main'>
@@ -193,6 +254,9 @@ const StaffUserView = () => {
                   <Card.Text className='d-flex justify-content-evenly align-items-center'>
                     <p>Estado</p>
                     <p className={internaBarber.nombre_estado == 'Activo' ? 'activo' : 'deshabilitado'}>{internaBarber.nombre_estado == null || internaBarber.nombre_estado == undefined ? 'Sin información' : internaBarber.nombre_estado}</p>
+                    <div className='d-flex justify-content-center align-items-center'>
+                      <svg className='editar' id={internaBarber.id_usuario} onClick={(e) => showUpdateBarberConfirm(e, internaBarber.nombre_estado)} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={internaBarber.id_usuario} onClick={(e) => showUpdateBarberConfirm(e, internaBarber.nombre_estado)} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
+                    </div>
                   </Card.Text>
 
                 </Card.Body>
@@ -327,24 +391,24 @@ const StaffUserView = () => {
                 {
                   !precio ? '' :
                     <div className='d-flex justify-content-center align-items-center'>
-                <p className="precio_interna">Precio a pagar: {precio}</p>
-            </div>
+                      <p className="precio_interna">Precio a pagar: {precio}</p>
+                    </div>
                 }
 
-          </Col>
-        </div>
-      </Row>
-      <div className='d-flex justify-content-center'>
-        <Form.Item >
-          <Button htmlType="button" onClick={onReset}>
-            Reset
-          </Button>
-          <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita">
-            Registar
-          </Button>
-        </Form.Item>
-      </div>
-    </Form>
+              </Col>
+            </div>
+          </Row>
+          <div className='d-flex justify-content-center'>
+            <Form.Item >
+              <Button htmlType="button" onClick={onReset}>
+                Reset
+              </Button>
+              <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita">
+                Registar
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
       </Modal >
     </div >
   )

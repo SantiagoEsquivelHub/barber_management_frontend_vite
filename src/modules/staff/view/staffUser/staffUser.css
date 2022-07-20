@@ -48,7 +48,7 @@
   margin-top: 2rem !important;
 }
 
- .activo {
+.activo {
   font-weight: bold;
   background-color: lightgreen;
   padding: 5px 5px;
@@ -82,4 +82,8 @@
     #f77170,
     #fc8181
   );
+}
+
+.editar {
+  color: #fdc43f;
 }

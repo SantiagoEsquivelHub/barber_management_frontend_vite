@@ -188,7 +188,7 @@ const UsersView = () => {
 
     if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
       //console.log('LLEGO');
-      alert("Solo se permiten imágenes en PDF, JPG y JPEG")
+      alert("Solo se permiten imágenes en PNG, JPG y JPEG")
       fileInput.value = "";
       //console.log(btn[0])
       btn[0].setAttribute('disabled', 'true');
