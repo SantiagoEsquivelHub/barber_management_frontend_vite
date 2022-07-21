@@ -76,3 +76,13 @@
   
   .cardBarber .ant-list-item-meta {
     align-items: center !important;
+  }
+
+
+  .yellow{
+    color: #fdc43f;
+  }
+
+  .precio{
+    font-weight: 500;
+  }

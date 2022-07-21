@@ -108,5 +108,9 @@
     #f26160,
     #f77170,
     #fc8181
-  )!important;
+  ) !important;
+}
+
+.centrar {
+  margin: 0 auto !important;
 }
