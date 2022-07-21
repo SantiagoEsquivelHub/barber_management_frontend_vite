@@ -44,6 +44,10 @@ const LoginView = ({ setToken }) => {
                     usuario: "",
                     clave: ""
                 })
+                localStorage.setItem('usuario', res.data.nombre_usuario)
+                localStorage.setItem('img', res.data.url_img_usuario)
+                localStorage.setItem('rol', res.data.nombre_rol)
+                localStorage.setItem('id', res.data.id_usuario)
             }, 1000);
         } catch (error) {
             if (error.response) {

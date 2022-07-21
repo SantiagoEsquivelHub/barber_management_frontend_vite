@@ -30,32 +30,34 @@ import {
       },
       title: {
         display: true,
-        text: 'Reporte mensual',
+        text: 'Servicios brindados este mes',
       },
     },
   };
   
   const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '27', '28', '29', '30'];
   
-  export const data = {
-    labels,
+
+
+const BarChart = ({ data }) => {
+const labels = data.map(e=> e.nombre_servicio);
+const datas = data.map(e=> e.count);
+
+  let data1 = {
+    labels: labels,
     datasets: [
       {
-        label: 'Dataset 2',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 20 })),
-        borderColor: 'rgb(136, 96, 1)',
-        backgroundColor: 'rgb(136, 96, 1)',
+        label: 'Servicios',
+        data: datas,
+        borderColor: '#fdc43f',
+        backgroundColor: '#fdc43f',
       },
     ],
   };
 
-
-const BarChart = ({ charData }) => {
-
-    console.log(charData)
     return (
       
-            <Line options={options} data={data} />
+            <Line options={options} data={data1} />
         
     )
 }

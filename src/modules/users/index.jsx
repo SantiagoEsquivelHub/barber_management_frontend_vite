@@ -58,14 +58,13 @@ const UsersView = () => {
   let prev_page = document.querySelector(".prev-page");
   let next_page = document.querySelector(".next-page");
   let elementos = document.querySelector(".displaying-num");
-  let current_page = document.querySelector(".current_page");
   let lista = document.querySelector(".lista");
 
   let token = localStorage.getItem("token");
   let headers = new Headers();
   headers.append("Authorization", "Bearer " + token);
   headers.append("Content-type", "application/json");
-
+  headers.append("Access-Control-Allow-Origin", "*")
 
   const getUsers = async (e) => {
 
@@ -282,51 +281,10 @@ const UsersView = () => {
     `;
     }
 
-    //current_page.textContent = data['pages'];
-
-    if (data['next'] == null) {
-      prev_page.setAttribute("style", "display:none");
-    } else {
-      prev_page.removeAttribute("style");
-      prev_page.setAttribute("data-page", `${data["previous"]}`);
-    }
-
-    if (data['previous'] == null) {
-      next_page.setAttribute("style", "display:none");
-    } else {
-      next_page.removeAttribute("style");
-      next_page.setAttribute("data-page", `${data["next"]}`);
-    }
 
 
-
-
-    /* else {
- 
-      busquedaArr.forEach(user => {
-        let busquedaHTML =
-          `<CardUser
-        key=${user.id_usuario}
-        nombre=${user.nombre_usuario}
-        correo=${user.correo_usuario}
-        telefono=${user.telefono_usuario}
-        estado=${user.estado_usuario}
-        url=${user.url_img_usuario}
-        id=${user.id_usuario}
-        />`;
- 
-        bodyUsers.innerHTML += busquedaHTML;
- 
-      })
-    }  */
   }
 
-  const prevNextPage = (e) => {
-
-    /*  let search = localStorage.getItem("search")
-     let page_next_prev = e.target.getAttribute("data-page");
-     onSearchUsers(search); */
-  }
 
   return (
     <div className='contenedor_main'>
@@ -346,15 +304,6 @@ const UsersView = () => {
           enterButton />
 
         <span className="displaying-num m-2"></span>
-        <Pagination className='d-flex align-items-center'>
-          <span className="displaying-num m-2"></span>
-          <Pagination.Prev className='prev-page' onClick={prevNextPage} data-page="" />
-
-          <Pagination.Item className='current_page' active>{1}</Pagination.Item>
-
-          <Pagination.Next className='next-page' onClick={prevNextPage} data-page="" />
-
-        </Pagination>
       </div>
 
       <Modal
