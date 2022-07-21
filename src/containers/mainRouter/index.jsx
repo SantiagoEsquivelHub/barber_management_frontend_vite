@@ -12,12 +12,19 @@ const MainRouter = ({ location }) => {
 
     const [token, setToken] = useState();
     const tokenLocal = localStorage.getItem('token');
+    let rol = localStorage.getItem('rol');
+    let id = localStorage.getItem('id');
+    let ruta = `/staff/${id}`
     if (!token && tokenLocal == undefined) {
       return <LoginView setToken={setToken} />
     }
 
-    if (location.pathname === '/') {
+    if (rol == 'Administrador' && location.pathname === '/') {
         return <Navigate to='/main' />;
+    }
+
+    if (rol == 'Barbero' && location.pathname === '/') {
+        return <Navigate to={ruta} />;
     }
 
     return (
@@ -25,11 +32,11 @@ const MainRouter = ({ location }) => {
            <Sidebar setToken={setToken}/>
             
                 <Routes>
-                    <Route path='/main' element={<DashboardRouter />} />
-                    <Route path='/staff' element={<StaffView />} />
+                    <Route path='/main'  element={rol == 'Barbero' ? (<ErrorView />) : <DashboardRouter />} />
+                    <Route path='/staff' element={rol == 'Barbero' ? (<ErrorView />) :<StaffView />} />
                     <Route path='/staff/:id' element={<StaffUserView />} />
-                    <Route path='/users' element={<UsersView />} />
-                   {/*  <Route path='/*' element={<ErrorView />} /> */}
+                    <Route path='/users' element={rol == 'Barbero' ? (<ErrorView />) :<UsersView />} />
+                    <Route path='/*' element={<ErrorView />} />
                 </Routes>
             
         </>

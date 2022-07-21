@@ -33,7 +33,7 @@ const layout = {
 const StaffUserView = () => {
 
   let params = useParams();
-
+  const [grafico, setGrafico] = useState(false);
   const [historial, setHistorial] = useState(false);
   const [statistics, setStatistics] = useState({
     day: '',
@@ -63,6 +63,7 @@ const StaffUserView = () => {
   const urlDay = `http://${document.domain}:3001/serviciosHoy/`;
   const urlMonth = `http://${document.domain}:3001/serviciosMes/`;
   const urlAvg = `http://${document.domain}:3001/serviciosPromedio/`;
+  const urlGrafico = `http://${document.domain}:3001/serviciosMesGrafico/`;
 
   let token = localStorage.getItem("token");
   let headers2 = new Headers();
@@ -106,6 +107,7 @@ const StaffUserView = () => {
     getInterna(params.id);
     getServicios();
     getStatistics();
+    getDiagram();
   }, [])
 
   const handleCancel = () => {
@@ -252,7 +254,7 @@ const StaffUserView = () => {
   };
 
   const getIdCita = async () => {
-    console.log(datos)
+    
     const requestOptions = {
       method: 'POST',
       headers: headers2,
@@ -314,11 +316,21 @@ const StaffUserView = () => {
 
     let res = await fetch(urlObtHistorial + params.id, requestOptions);
     let data = await res.json();
-    console.log(data)
     setHistorial(data);
-    console.log(historial)
+
   }
 
+
+  const getDiagram = async () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: headers2,
+    }
+
+    let res = await fetch(urlGrafico + params.id, requestOptions);
+    let data = await res.json();
+    setGrafico(data);
+  }
 
   return (
     <div className='contenedor_main'>
@@ -366,7 +378,7 @@ const StaffUserView = () => {
                     <Card.Body>
                       <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.month}</div>
                       <Card.Text className='d-flex justify-content-center align-items-center card_text'>
-                        Total de servicios en el mes
+                        Total de citas en el mes
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -374,16 +386,16 @@ const StaffUserView = () => {
                     <Card.Body>
                       <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.avg}</div>
                       <Card.Text className='d-flex justify-content-center align-items-center card_text'>
-                        Promedio de servicios por día
+                        Promedio de citas por día
                       </Card.Text>
                     </Card.Body>
                   </Card>
                 </div>
 
                 <div>
-                  <Card className='m-3 col-6 centrar' >
+                  <Card className='m-3 col-8 centrar' >
                     <Card.Body >
-                      <BarChart  />
+                      <BarChart data={grafico}/>
                     </Card.Body>
                   </Card>
                 </div>
@@ -400,7 +412,7 @@ const StaffUserView = () => {
             </div>
             <div>
 
-              {!historial ? 'Cargando...' :
+              {!historial || historial.length == 0 ? 'Sin información' :
 
                 historial.map(element => {
 
