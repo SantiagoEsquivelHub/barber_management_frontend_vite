@@ -44,7 +44,7 @@ const LoginView = ({ setToken }) => {
                     usuario: "",
                     clave: ""
                 })
-            }, 5000);
+            }, 1000);
         } catch (error) {
             if (error.response) {
                 console.log(error.response.data);

@@ -18,7 +18,7 @@ const Sidebar = ({setToken}) => {
             setToken();
            navegate("/");
            setLogout(false);
-        }, 5000);
+        }, 1000);
         
 
     }

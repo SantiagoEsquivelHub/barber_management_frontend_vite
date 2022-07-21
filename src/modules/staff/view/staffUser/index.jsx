@@ -16,6 +16,9 @@ import {
 import Card from 'react-bootstrap/Card';
 import './staffUser.css';
 import { Timeline } from 'antd';
+import BarChart from '../../components/BarChart';
+
+
 
 const { Meta } = Card;
 const { Option } = Select;
@@ -31,6 +34,12 @@ const StaffUserView = () => {
 
   let params = useParams();
 
+  const [historial, setHistorial] = useState(false);
+  const [statistics, setStatistics] = useState({
+    day: '',
+    month: '',
+    avg: ''
+  });
   const [internaBarber, setInternaBarber] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,6 +56,13 @@ const StaffUserView = () => {
   const urlServicios = `http://${document.domain}:3001/servicio/`;
   const urlCrearCita = `http://${document.domain}:3001/crearCita/`;
   const urlEditarBarbero = `http://${document.domain}:3001/editarUsuario/`;
+  const urlHistorial = `http://${document.domain}:3001/crearHistorial/`;
+  const urlObtHistorial = `http://${document.domain}:3001/serviciosHistorial/`;
+  const urlIdCita = `http://${document.domain}:3001/idCita/`;
+  const btnSubmitCita = document.querySelector('.btnCrearCita');
+  const urlDay = `http://${document.domain}:3001/serviciosHoy/`;
+  const urlMonth = `http://${document.domain}:3001/serviciosMes/`;
+  const urlAvg = `http://${document.domain}:3001/serviciosPromedio/`;
 
   let token = localStorage.getItem("token");
   let headers2 = new Headers();
@@ -78,19 +94,18 @@ const StaffUserView = () => {
       headers: headers2,
     }
 
-    console.log(datos.id_servicio)
-
     const res = await fetch(urlServicios, requestOptions);
     const data = await res.json();
-    //console.log("roles", data);
     setServicios(data);
 
   }
 
 
   useEffect(() => {
+    getHistorial();
     getInterna(params.id);
     getServicios();
+    getStatistics();
   }, [])
 
   const handleCancel = () => {
@@ -140,7 +155,6 @@ const StaffUserView = () => {
     const res = await fetch(urlServicios + value, requestOptions);
     const data = await res.json();
     setPrecio(data[0].precio_servicio);
-    console.log(precio)
   };
 
   const handleSubmitCitas = async (e) => {
@@ -154,10 +168,12 @@ const StaffUserView = () => {
       )
     }
 
-    console.log(datos)
+    let idBarber = btnSubmitCita.id;
 
-    const res = await fetch(urlCrearCita, requestOptions);
-    //console.log(res)
+    const cita = await fetch(urlCrearCita, requestOptions);
+    const resp = await getIdCita();
+    const historia = await createHistorial(idBarber, resp[0].id_cita)
+
     openNotificationWithIcon('success');
 
     setLoading(true);
@@ -166,7 +182,7 @@ const StaffUserView = () => {
       setVisible(false);
       onReset();
       window.location.reload();
-    }, 3000);
+    }, 1000);
 
   };
 
@@ -207,13 +223,13 @@ const StaffUserView = () => {
       )
     }
 
- 
+
     const res = await fetch(urlEditarBarbero + idBarber, requestOptions);
     openNotificationBarberUpdated('success');
 
     setTimeout(() => {
       window.location.reload();
-    }, 3000);
+    }, 1000);
 
   }
 
@@ -235,12 +251,79 @@ const StaffUserView = () => {
     });
   };
 
+  const getIdCita = async () => {
+    console.log(datos)
+    const requestOptions = {
+      method: 'POST',
+      headers: headers2,
+      body: JSON.stringify({
+        ...datos
+      })
+    }
+
+    const res = await fetch(urlIdCita, requestOptions);
+    const data = res.json();
+
+    return data;
+  }
+
+  const createHistorial = async (idBarber, idCita) => {
+
+    const requestOptions = {
+      method: 'POST',
+      headers: headers2,
+      body: JSON.stringify({
+        id_usuario: `${idBarber}`,
+        id_cita: `${idCita}`
+      }
+      )
+    }
+
+    const res = await fetch(urlHistorial, requestOptions);
+
+  }
+
+  const getStatistics = async () => {
+
+    const requestOptions = {
+      method: 'GET',
+      headers: headers2,
+    }
+
+    let resDay = await fetch(urlDay + params.id, requestOptions);
+    let dataDay = await resDay.json();
+
+    let resMonth = await fetch(urlMonth + params.id, requestOptions);
+    let dataMonth = await resMonth.json();
+
+    let resAvg = await fetch(urlAvg + params.id, requestOptions);
+    let dataAvg = await resAvg.json();
+
+    setStatistics({
+      day: dataDay,
+      month: dataMonth,
+      avg: dataAvg
+    })
+  }
+
+  const getHistorial = async () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: headers2,
+    }
+
+    let res = await fetch(urlObtHistorial + params.id, requestOptions);
+    let data = await res.json();
+    console.log(data)
+    setHistorial(data);
+    console.log(historial)
+  }
 
 
   return (
     <div className='contenedor_main'>
       {
-        !internaBarber ? 'Cargando...' :
+        !internaBarber && statistics ? 'Cargando...' :
 
           <div>
             <div className='d-flex align-items-center justify-content-around'>
@@ -257,32 +340,40 @@ const StaffUserView = () => {
                     <div className='d-flex justify-content-center align-items-center'>
                       <svg className='editar' id={internaBarber.id_usuario} onClick={(e) => showUpdateBarberConfirm(e, internaBarber.nombre_estado)} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={internaBarber.id_usuario} onClick={(e) => showUpdateBarberConfirm(e, internaBarber.nombre_estado)} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
                     </div>
+
                   </Card.Text>
+                  <div className='d-flex justify-content-center align-items-center'>
+                    <Button type="primary" className={internaBarber.nombre_estado == 'Activo' ? 'btnAgregarCita' : 'ocultar'} onClick={showModal} >
+                      Registrar cita
+                    </Button>
+                  </div>
 
                 </Card.Body>
               </Card>
+
+
               <div className='d-flex flex-column col-6'>
                 <div className='d-flex justify-content-center align-items-center'>
                   <Card className='m-3 col-4' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
+                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.day}</div>
+                      <Card.Text className='d-flex justify-content-center align-items-center card_text'>
                         Citas registradas hoy
                       </Card.Text>
                     </Card.Body>
                   </Card>
                   <Card className='m-3 col-4' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
+                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.month}</div>
+                      <Card.Text className='d-flex justify-content-center align-items-center card_text'>
                         Total de servicios en el mes
                       </Card.Text>
                     </Card.Body>
                   </Card>
                   <Card className='m-3 col-4' >
                     <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
+                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>{statistics.avg}</div>
+                      <Card.Text className='d-flex justify-content-center align-items-center card_text'>
                         Promedio de servicios por día
                       </Card.Text>
                     </Card.Body>
@@ -290,59 +381,46 @@ const StaffUserView = () => {
                 </div>
 
                 <div>
-                  <Card className='m-3 col-12' >
-                    <Card.Body>
-                      <div className='d-flex justify-content-center align-items-center card_info mb-2'>10</div>
-                      <Card.Text className='d-flex justify-content-center align-items-center'>
-                        Promedio de servicios por día
-                      </Card.Text>
+                  <Card className='m-3 col-6 centrar' >
+                    <Card.Body >
+                      <BarChart  />
                     </Card.Body>
                   </Card>
                 </div>
               </div>
             </div>
-
-            <div className='timeline_interna col-6'>
-              <Card className='m-3' >
-                <Card.Body>
-                  <div className='d-flex align-items-center justify-content-between mb-2'>
-                    <Card.Title className=''>Historial</Card.Title>
-                    <Button type="primary" className="btnAgregarCita" onClick={showModal}>
-                      Registrar cita
-                    </Button>
-                  </div>
-                  <Timeline>
-                    <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                    <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
-                    <Timeline.Item color="red">
-                      <p>Solve initial network problems 1</p>
-                      <p>Solve initial network problems 2</p>
-                      <p>Solve initial network problems 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item>
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="gray">
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="gray">
-                      <p>Technical testing 1</p>
-                      <p>Technical testing 2</p>
-                      <p>Technical testing 3 2015-09-01</p>
-                    </Timeline.Item>
-                    <Timeline.Item color="#00CCFF">
-                      <p>Custom color testing</p>
-                    </Timeline.Item>
-                  </Timeline>
-                </Card.Body>
-              </Card>
-            </div>
           </div>
       }
+
+      <div className='timeline_interna col-6'>
+        <Card className='m-3' >
+          <Card.Body>
+            <div className='d-flex align-items-center justify-content-between mb-2'>
+              <Card.Title className=''>Historial</Card.Title>
+            </div>
+            <div>
+
+              {!historial ? 'Cargando...' :
+
+                historial.map(element => {
+
+                  return <Timeline.Item color='#fdc43f'>
+                    <p className='yellow'>{element.nombre_servicio}</p>
+                    <p>{element.nombre_cliente}</p>
+                    <p>{element.fecha_cita}</p>
+                    <p className='precio'>${element.precio_servicio}</p>
+                  </Timeline.Item>
+
+
+                })
+
+              }
+            </div>
+          </Card.Body>
+        </Card>
+      </div>
+
+
 
       <Modal
         visible={visible}
@@ -403,7 +481,7 @@ const StaffUserView = () => {
               <Button htmlType="button" onClick={onReset}>
                 Reset
               </Button>
-              <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita">
+              <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita" id={internaBarber.id_usuario}>
                 Registar
               </Button>
             </Form.Item>
