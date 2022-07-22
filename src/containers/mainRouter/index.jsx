@@ -27,6 +27,8 @@ const MainRouter = ({ location }) => {
         return <Navigate to={ruta} />;
     }
 
+    
+
     return (
         <>
            <Sidebar setToken={setToken}/>

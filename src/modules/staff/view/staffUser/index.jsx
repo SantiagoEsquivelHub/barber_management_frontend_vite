@@ -16,8 +16,8 @@ import {
 import Card from 'react-bootstrap/Card';
 import './staffUser.css';
 import { Timeline } from 'antd';
-import BarChart from '../../components/BarChart';
-import moment from 'moment';
+import BarChart from '../../../../components/BarChart';
+
 
 
 const { Meta } = Card;
@@ -329,13 +329,14 @@ const StaffUserView = () => {
 
     let res = await fetch(urlGrafico + params.id, requestOptions);
     let data = await res.json();
+    console.log(data)
     setGrafico(data);
   }
 
   return (
     <div className='contenedor_main'>
       {
-        !internaBarber && statistics ? 'Cargando...' :
+        !internaBarber || !statistics || !grafico ? 'Cargando...' :
 
           <div>
             <div className='d-flex align-items-center justify-content-around'>
@@ -393,8 +394,9 @@ const StaffUserView = () => {
                 </div>
 
                 <div>
-                  <Card className='m-3 col-8 centrar' >
+                  <Card className='m-3 col-7 centrar' >
                     <Card.Body >
+                      
                       <BarChart data={grafico}/>
                     </Card.Body>
                   </Card>

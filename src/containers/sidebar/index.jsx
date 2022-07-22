@@ -12,6 +12,7 @@ const Sidebar = ({ setToken }) => {
     const [dataUser, setDataUser] = useState(false);
 
 
+
     let navegate = useNavigate();
     const handleLogout = () => {
         setLogout(!logout);
@@ -27,7 +28,6 @@ const Sidebar = ({ setToken }) => {
 
     useEffect(() => {
         getData();
-        
     }, [])
 
     const getData = () => {
@@ -43,7 +43,7 @@ const Sidebar = ({ setToken }) => {
             rol: rol,
             id: id
         })
-        
+
     }
 
 
