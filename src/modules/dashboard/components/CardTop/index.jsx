@@ -1,11 +1,11 @@
 import React from 'react'
 import iconBarber from '../../../../assets/images/icono.png'
+import './CardTop.css';
 
-
- const CardBarber = ({ nombre, correo, telefono, estado, url, id }) => {
+ const CardTop = ({ nombre, url, numServicios, id }) => {
     return (
         <div>
-            <div id={id} className="cardBarber col-12">
+            <div id={id} className="cardTop">
 
                 <li className="ant-list-item"><div class="ant-list-item-meta">
                     <div className="ant-list-item-meta-avatar">
@@ -19,13 +19,9 @@ import iconBarber from '../../../../assets/images/icono.png'
                         </h4>
                     </div>
                     <div className="ant-list-item-meta-content">
-                        <div className="ant-list-item-meta-description correo">{correo}</div>
-                    </div>
-                    <div className="ant-list-item-meta-content">
-                        <div className="ant-list-item-meta-description telefono">{telefono}</div>
+                        <div className="ant-list-item-meta-description">{numServicios == 1 ? '1 servicio en mes' : `${numServicios} servicios en mes`}</div>
                     </div>
                 </div>
-                    <div className={estado == 1 ? 'activo' : 'deshabilitado'}>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
                     <ul className="ant-list-item-action">
                         <li>
                             <img src={iconBarber} className="icono_barber"/>
@@ -36,4 +32,4 @@ import iconBarber from '../../../../assets/images/icono.png'
         </div>
     )
 }
-export default CardBarber;
+export default CardTop;
