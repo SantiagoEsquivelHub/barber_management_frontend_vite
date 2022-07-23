@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import {
+  Input,
+  Result
+} from 'antd';
+import { headers } from '../../../../components/headers/headers';
+import CardBarber from '../../components/CardBarber';
 import '../../../../components/style/global.css'
 import '../../../users/users.css';
 import './staff.css';
-import {
-  Modal,
-  Form,
-  Input,
-  Select,
-  Button,
-  Col,
-  Row,
-  Upload,
-  notification,
-  Result
-} from 'antd';
-import  CardBarber from '../../components/CardBarber';
 
 const { Search } = Input;
 
+/*Componente usado para mostrar la interna de cada uno de los barberos*/
+
 const StaffView = () => {
 
+  /*Variables globales para las peticiones*/
   const urlGetBarbers = `http://${document.domain}:3001/barberos/`;
   const urlBusquedaBarbers = `http://${document.domain}:3001/busqueda/`;
 
+  /*Estados generales*/
   const [barber, setBarber] = useState(false);
   const [dataBarber, setDataBarber] = useState(false);
   const [result, setResult] = useState(true);
@@ -31,21 +28,11 @@ const StaffView = () => {
     type: 'barberos'
   });
 
-  
+  /*Elementos del DOM*/
   let lista = document.querySelector(".lista");
   let elementos = document.querySelector(".displaying-num");
-  let token = localStorage.getItem("token");
-  let headers = new Headers();
-  headers.append("Authorization", "Bearer " + token);
-  headers.append("Content-type", "application/json");
 
-  useEffect(() => {
-
-    getBarbers();
-
-
-  }, [])
-
+  /*Función para obtener la data de todos los barberos a mostrar*/
   const getBarbers = async (e) => {
 
     const requestOptions = {
@@ -63,6 +50,7 @@ const StaffView = () => {
 
   }
 
+  /*Función para hacer búsquedas de barberos*/
   const onSearchBarbers = async (value) => {
 
     if (value == '') {
@@ -118,6 +106,13 @@ const StaffView = () => {
 
 
   }
+
+  /*Función que se ejecutarán cuando se renderice la página*/
+  useEffect(() => {
+
+    getBarbers();
+
+  }, [])
 
   return (
     <>

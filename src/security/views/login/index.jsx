@@ -1,13 +1,21 @@
 import { useState } from "react";
 import PropTypes from 'prop-types';
+import { notification } from 'antd';
 import axios from "axios";
 import './login.css';
-import { notification } from 'antd';
 
-
+/*Componente usado para validar el ingreso de usuarios*/
 
 const LoginView = ({ setToken }) => {
 
+    /*Estados generales para recepción de datos del usuario*/
+    const [user, setUser] = useState(false);
+    const [datos, setDatos] = useState({
+        usuario: "",
+        clave: ""
+    });
+
+    /*Función para mostrar notificación cuando los datos del usuario para el login son incorrectos*/
     const openNotificationWithIcon = (type) => {
         notification[type]({
             message: '¡Credenciales incorrectas!',
@@ -16,18 +24,14 @@ const LoginView = ({ setToken }) => {
         });
     };
 
-    const [user, setUser] = useState(false);
-    const [datos, setDatos] = useState({
-        usuario: "",
-        clave: ""
-    });
-
+    /*Función para actualizar los datos del usuario cada vez que hace cambios en los inputs del formulario del login*/
     const handleInputChange = (e) => {
         let { name, value } = e.target;
         let newDatos = { ...datos, [name]: value };
         setDatos(newDatos);
     }
 
+    /*Función para enviar los datos ingresados por el usuario para saber si puede ingresar o no*/
     const handleSubmit = async (e) => {
         e.preventDefault();
 

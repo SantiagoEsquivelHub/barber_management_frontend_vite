@@ -7,21 +7,15 @@ import 'antd/dist/antd.css';
 const App = () => {
 
   const location = useLocation();
-  if (location.pathname === '/*') {
-   
-}
 
   return (
-
-  
-      <Routes>
-        <Route path='/*' element={<MainRouter location={location}/>} />
-      </Routes>
-   /*  */
+    /*Al ingresar al software nos movemos al componente MainRouter, en dónde tenemos las rutas principales*/
+    <Routes>
+      <Route path='/*' element={<MainRouter location={location} />} />
+    </Routes>
 
   )
 }
-
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

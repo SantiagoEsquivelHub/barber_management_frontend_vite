@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
-import icon from '../../assets/images/icono.png';
 import { Links } from '../sidebar/Data/index'
+import { useNavigate } from "react-router-dom";
+import userPhoto from '../../assets/images/UserPhoto.png'
 import Item from "./Item";
 import './sidebar.scss';
-import userPhoto from '../../assets/images/UserPhoto.png'
-import { useNavigate } from "react-router-dom";
+
 const Sidebar = ({ setToken }) => {
 
+    /*Estados generales*/
     const [open, setOpen] = useState(false);
     const [logout, setLogout] = useState(false);
     const [dataUser, setDataUser] = useState(false);
 
-
-
+    /*Método imperactivo para cambiar de localización en el software*/
     let navegate = useNavigate();
+
+    /*Función para salir del software e ir al login*/
     const handleLogout = () => {
         setLogout(!logout);
         localStorage.removeItem('token');
@@ -22,14 +24,9 @@ const Sidebar = ({ setToken }) => {
             navegate("/");
             setLogout(false);
         }, 1000);
-
-
     }
 
-    useEffect(() => {
-        getData();
-    }, [])
-
+    /*Función para tener los datos del usuario que acaba de entrar al software*/
     const getData = () => {
 
         let usuario = localStorage.getItem('usuario');
@@ -46,6 +43,12 @@ const Sidebar = ({ setToken }) => {
 
     }
 
+    /*Funciones que se ejecutarán cuando se renderice la página*/
+    useEffect(() => {
+
+        getData();
+
+    }, [])
 
     return (
         <>
