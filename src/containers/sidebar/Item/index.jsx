@@ -2,6 +2,8 @@ import React from 'react'
 import { NavLink } from 'react-router-dom';
 import './item.scss';
 
+/*Componente para mostrar cada uno de los módulos en el Sidebar*/
+
 const Item = ({ text, to, svg, open }) => {
   return (
     <div>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import {
     Modal,
     Form,
@@ -11,26 +11,29 @@ import {
     Upload,
     notification
 } from 'antd';
+import { useGetBase64 } from '../../../../hooks/useGetBase64';
+import { headers } from '../../../../components/headers/headers';
 
 const { Option } = Select;
 
+/*Layout para inputs de los formularios*/
 const layout = {
     labelCol: { span: 20 },
     wrapperCol: { span: 50 },
 };
 
+/*Componente usado para mostrar la información de cada uno de los usuarios, como el nombre, correo, telefono, imagen, y estado*/
+
 export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     const { confirm } = Modal;
 
-
+    /*Estados generales*/
     const [users, setUsers] = useState(false);
-    const [rol, setRol] = useState(false);
     const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
     const [visibleVerUsuario, setVisibleVerUsuario] = useState(false)
     const [form] = Form.useForm();
-
     const [datos, setDatos] = useState({
         nombre_usuario: '',
         telefono_usuario: '',
@@ -38,30 +41,26 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         url_img_usuario: ''
     })
 
+    /*Variables globales para las peticiones*/
     const urlVerUsuario = `http://${document.domain}:3001/usuarios/`;
     const urlEditarUsuario = `http://${document.domain}:3001/editarUsuario/`;
     const urlEliminarUsuario = `http://${document.domain}:3001/eliminarUsuario/`;
 
     let idUser = localStorage.getItem('id');
-    let token = localStorage.getItem("token");
-    let headers2 = new Headers();
-    headers2.append("Authorization", "Bearer " + token);
-    headers2.append("Content-type", "application/json");
-    headers2.append("Access-Control-Allow-Origin", "*")
 
+    /*Función para editar/actualizar usuarios*/
     const updateUsers = async (e) => {
-        let idUser = localStorage.getItem('idUser');
 
         const requestOptions = {
             method: 'POST',
-            headers: headers2,
+            headers: headers,
             body: JSON.stringify({
                 ...datos
             }
             )
         }
 
-        const res = await fetch(urlEditarUsuario + idUser, requestOptions);
+        const res = await fetch(urlEditarUsuario + id, requestOptions);
         openNotificationWithIcon('success');
 
         setLoading(true);
@@ -69,19 +68,17 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             setLoading(false);
             setVisible(false);
             onReset();
-            localStorage.removeItem('idUser');
             window.location.reload();
         }, 1000);
 
     }
 
-
-
+    /*Función para eliminar usuarios*/
     const deleteUsers = async (idUserDel) => {
 
         const requestOptions = {
             method: 'POST',
-            headers: headers2,
+            headers: headers,
         }
 
         const ruta = urlEliminarUsuario + idUserDel;
@@ -92,18 +89,17 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
         setLoading(true);
         setTimeout(() => {
-            //localStorage.removeItem('idUser');
             window.location.reload();
         }, 1000);
 
     }
 
-
+    /*Función para obtener la data de cada usuario*/
     const getUsers = async (idUserVer) => {
 
         const requestOptions = {
             method: 'GET',
-            headers: headers2,
+            headers: headers,
         }
 
         const ruta = urlVerUsuario + idUserVer;
@@ -116,38 +112,29 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     }
 
-    const getId = (e) => {
-
-        let idUser = e.target.id;
-        localStorage.setItem('idUser', idUser);
+    /*Función que abre el modal del formulario para editar usuarios*/
+    const openEditUser = (e) => {
         setVisible(true);
-        return idUser;
     }
 
+    /*Función que retorna el id del usuario a eliminar*/
     const getIdDelete = (e) => {
         let idUserDel = e.target.id;
         return idUserDel;
     }
 
+    /*Función que cierra el modal del formulario para editar usuarios*/
     const handleCancel = () => {
         setVisible(false);
     };
 
-
+    /*Función que limpia los inputs del formulario para editar usuarios*/
     const onReset = () => {
         form.resetFields();
     };
 
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e.fileList;
-        }
-
-        return e.fileList;
-    };
-
-
-    const handleInputChange2 = (e) => {
+    /*Función para actualizar los datos del usuario cada vez que hace cambios en los inputs del formulario de crear usuarios*/
+    const handleInputChange = (e) => {
 
         setDatos({
             ...datos,
@@ -156,15 +143,8 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     }
 
-
-    const props = {
-        name: 'file',
-        headers: {
-            authorization: 'authorization-text',
-        },
-    }
-
-    const getUrl2 = async () => {
+    /*Función para convertir la URL del adjunto que suben al formulario de crear usuarios en base64 y almacenarlo en el estado global*/
+    const getUrlUpdateUser = async () => {
 
         const fileInput = document.getElementById('url_img_usuario2');
         const selectedFile = fileInput.files[0];
@@ -178,7 +158,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             btn[0].setAttribute('disabled', 'true');
         } else {
             btn[0].removeAttribute('disabled');
-            let result = await getBase64(selectedFile);
+            let result = await useGetBase64(selectedFile);
             let url = result;
             //console.log(url)
             setDatos({
@@ -186,10 +166,9 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                 ['url_img_usuario']: url
             })
         }
-
-
     }
 
+    /*Función que actualiza cual item de la lista desplegable es seleccionado*/
     const handleSelectChange = (value) => {
 
         setDatos({
@@ -197,21 +176,9 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             ['estado_usuario']: value
         })
 
-
     };
 
-
-    const getBase64 = (file) =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-
-            reader.onload = () => resolve(reader.result);
-
-            reader.onerror = (error) => reject(error);
-        });
-
-
+    /*Función que muestra una notificación cuando se ha logrado actualizar un usuario*/
     const openNotificationWithIcon = (type) => {
         notification[type]({
             message: '¡Usuario actualizado correctamente!',
@@ -220,6 +187,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         });
     };
 
+    /*Función que muestra una notificación cuando se ha logrado eliminar un usuario*/
     const openNotificationWithIconDelete = (type) => {
         notification[type]({
             message: '¡Usuario eliminado correctamente!',
@@ -228,13 +196,11 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         });
     };
 
-
+    /*Función que muestra un modal con la información del usuario*/
     const openUser = (e) => {
 
         let idUserVer = e.target.id;
         localStorage.setItem('idUserVer', idUserVer);
-
-        console.log(idUserVer);
 
         getUsers(idUserVer);
 
@@ -242,11 +208,12 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
 
     }
 
-    const handleOkUser = () => {
+    /*Función quecierra un modal con la información del usuario*/
+    const handleCancelUser = () => {
         setVisibleVerUsuario(false);
     };
 
-
+    /*Función que muestra un modal para confirmar que se quiere eliminar un usuario*/
     const showDeleteConfirm = async (e) => {
 
         let idUserDel = getIdDelete(e);
@@ -262,6 +229,22 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                 deleteUsers(idUserDel);
             },
         });
+    };
+
+    /*Función y objetos del antd requeridos para el uso del componente Upload*/
+    const props = {
+        name: 'file',
+        headers: {
+            authorization: 'authorization-text',
+        }
+    }
+
+    const normFile = (e) => {
+        if (Array.isArray(e)) {
+            return e.fileList;
+        }
+
+        return e.fileList;
     };
 
 
@@ -286,14 +269,14 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                     <div class="ant-list-item-meta-content">
                         <div class="ant-list-item-meta-description telefono">{telefono}</div>
                     </div>
-     
+
                 </div>
                     <div className={estado == 1 ? 'activo' : 'deshabilitado'}>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
                     <ul class="ant-list-item-action">
                         <li>
                             <div >
 
-                                <svg className='editar' onClick={getId} id={id} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={id} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
+                                <svg className='editar' onClick={openEditUser} id={id} viewBox="64 64 896 896" focusable="false" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path id={id} d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
 
                             </div>
                         </li>
@@ -301,8 +284,8 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                             <div>
                                 {
                                     idUser == id ? <svg className='eliminar_bloqueado' viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true" data-darkreader-inline-fill="" ><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
-                                    :
-                                        <svg className='eliminar' onClick={showDeleteConfirm} id={id} viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true" data-darkreader-inline-fill="" ><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
+                                        :
+                                        <svg className='eliminar' onClick={showDeleteConfirm} id={id} viewBox="64 64 896 896" focusable="false" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true" data-darkreader-inline-fill="" ><path id={id} d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg>
 
                                 }
                             </div>
@@ -329,10 +312,8 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                             name="url_img_usuario2"
                             label=""
                             valuePropName="fileList"
+                            onChange={getUrlUpdateUser}
                             getValueFromEvent={normFile}
-                            onChange={getUrl2}
-
-
                         >
                             <Upload name="url_img_usuario2" listType="picture" {...props} maxCount={1} id="url_img_usuario2" accept="image/png, image/jpeg, image/jpg">
                                 <Button icon={<UploadOutlined />}>Foto de perfil</Button>
@@ -344,7 +325,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                         <div className='d-flex justify-content-center'>
                             <Col span={12} className="m-3">
                                 <Form.Item name="nombre_usuario" label="Nombre" className="d-flex flex-column">
-                                    <Input type="text" onChange={handleInputChange2} name="nombre_usuario" />
+                                    <Input type="text" onChange={handleInputChange} name="nombre_usuario" />
                                 </Form.Item>
                                 <Form.Item name="estado_usuario" label="Estado" className="d-flex flex-column">
 
@@ -366,7 +347,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                             </Col>
                             <Col span={12} className="m-3">
                                 <Form.Item name="telefono_usuario" label="Teléfono" className="d-flex flex-column" id="telefono_usuario">
-                                    <Input type="text" onChange={handleInputChange2} name="telefono_usuario" />
+                                    <Input type="text" onChange={handleInputChange} name="telefono_usuario" />
                                 </Form.Item>
                             </Col>
                         </div>
@@ -388,7 +369,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
             <Modal
                 visible={visibleVerUsuario}
                 title="Ver usuario"
-                onCancel={handleOkUser}
+                onCancel={handleCancelUser}
                 width="800px"
                 footer={[
 

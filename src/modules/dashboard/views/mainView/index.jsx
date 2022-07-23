@@ -1,38 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import '../../../../components/style/global.css'
-import {
-    Modal,
-    Form,
-    Input,
-    Select,
-    Button,
-    Col,
-    Row,
-    Upload,
-    notification,
-    Result
-} from 'antd';
+import { headers } from '../../../../components/headers/headers';
 import Card from 'react-bootstrap/Card';
 import BarChart from '../../../../components/BarChart';
 import CardTop from '../../components/CardTop';
+import '../../../../components/style/global.css'
 
-
-
+/*Componente usado para mostrar la información y estadisticas de interés para los administradores de la barbería*/
 
 const DashboardRouter = () => {
 
+    /*Variables globales para las peticiones*/
     const urlDay = `http://${document.domain}:3001/serviciosHoy/0`;
     const urlMonth = `http://${document.domain}:3001/serviciosMes/0`;
     const urlAvg = `http://${document.domain}:3001/serviciosPromedio/0`;
     const urlGrafico = `http://${document.domain}:3001/serviciosMesGrafico/0`;
     const urlTop = `http://${document.domain}:3001/serviciosTop/`;
 
-    let token = localStorage.getItem("token");
-    let headers = new Headers();
-    headers.append("Authorization", "Bearer " + token);
-    headers.append("Content-type", "application/json");
-    headers.append("Access-Control-Allow-Origin", "*")
-
+    /*Estados generales*/
     const [top, setTop] = useState(false);
     const [grafico, setGrafico] = useState(false);
     const [statistics, setStatistics] = useState({
@@ -41,6 +25,7 @@ const DashboardRouter = () => {
         avg: ''
     });
 
+    /*Función para obtener la data a mostrar en el las estadisticas*/
     const getStatistics = async () => {
 
         const requestOptions = {
@@ -64,6 +49,7 @@ const DashboardRouter = () => {
         })
     }
 
+    /*Función para obtener la data a mostrar en el gráfico/diagrama*/
     const getDiagram = async () => {
         const requestOptions = {
             method: 'GET',
@@ -75,6 +61,7 @@ const DashboardRouter = () => {
         setGrafico(data);
     }
 
+    /*Función para obtener la data de los 3 mejores barberos*/
     const getTop = async () => {
         const requestOptions = {
             method: 'GET',
@@ -86,11 +73,13 @@ const DashboardRouter = () => {
         setTop(data);
     }
 
+    /*Funciones que se ejecutarán cuando se renderice la página*/
     useEffect(() => {
 
         getStatistics();
         getDiagram();
         getTop();
+
     }, [])
 
 

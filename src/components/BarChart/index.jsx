@@ -1,46 +1,48 @@
 import React from 'react'
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-  import { Line } from 'react-chartjs-2';
-  import faker from 'faker';
-  
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-  );
-  
-  export const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Servicios brindados este mes',
-      },
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+/*Objeto con las caracteristicas a mostrar que va a tener el gráfico*/
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
     },
-  };
-  
-  
+    title: {
+      display: true,
+      text: 'Servicios brindados este mes',
+    },
+  },
+};
+
+/*Componente que muestra una gráfica según la data que llega (se usa en la interna de los barberos y en el Dashboard)*/
 
 const BarChart = ({ data }) => {
- 
-let labels = data?.map(e=> e.nombre_servicio);
-let datas = data?.map(e=> e.count);
+
+  /*Se obtienen los labels y la datas a mostrar, según la data que llega por desestructuración*/
+  let labels = data?.map(e => e.nombre_servicio);
+  let datas = data?.map(e => e.count);
 
   let data1 = {
     labels: labels,
@@ -54,11 +56,11 @@ let datas = data?.map(e=> e.count);
     ],
   };
 
-    return (
-      
-            <Line options={options} data={data1} />
-        
-    )
+  return (
+
+    <Line options={options} data={data1} />
+
+  )
 }
 
 export default BarChart;

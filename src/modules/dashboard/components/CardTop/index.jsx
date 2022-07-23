@@ -2,7 +2,9 @@ import React from 'react'
 import iconBarber from '../../../../assets/images/icono.png'
 import './CardTop.css';
 
- const CardTop = ({ nombre, url, numServicios, id }) => {
+/*Componente usado para mostrar cada uno de los barberos del top de los 3 mejores barberos, solo muestra el nombre, la imagen y el número de servicios por el mes*/
+
+const CardTop = ({ nombre, url, numServicios, id }) => {
     return (
         <div>
             <div id={id} className="cardTop">
@@ -24,7 +26,7 @@ import './CardTop.css';
                 </div>
                     <ul className="ant-list-item-action">
                         <li>
-                            <img src={iconBarber} className="icono_barber"/>
+                            <img src={iconBarber} className="icono_barber" />
                         </li>
                     </ul>
                 </li>

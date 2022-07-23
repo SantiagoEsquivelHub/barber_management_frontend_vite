@@ -1,6 +1,10 @@
 import error404 from '../../../assets/images/error404.png';
-import './error.css'
+import './error.css';
+
+    /*Componente usado para cuando se intenta redireccionar a una ruta no especificada*/
+
 const ErrorView = () => {
+
     return (
         <div className='error404'>
             <h1 className='font'>404 NOT FOUND</h1>
