@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import iconBarber from '../../../../assets/images/icono.png'
 
 /*Componente usado para mostrar cada uno de los barberos, muestra el nombre, la imagen, el correo, el teléfono y su estado*/
@@ -36,5 +37,14 @@ const CardBarber = ({ nombre, correo, telefono, estado, url, id }) => {
             </div>
         </div>
     )
+}
+
+CardBarber.propTypes = {
+    nombre: PropTypes.string.isRequired,
+    correo: PropTypes.string.isRequired,
+    telefono: PropTypes.string.isRequired,
+    estado: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
 }
 export default CardBarber;
