@@ -13,6 +13,7 @@ import {
 } from 'antd';
 import { useGetBase64 } from '../../../../hooks/useGetBase64';
 import { headers } from '../../../../components/headers/headers';
+import PropTypes from 'prop-types';
 
 const { Option } = Select;
 
@@ -433,6 +434,15 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         </>
     )
 
+}
+
+CardUser.propTypes = {
+    nombre: PropTypes.string.isRequired,
+    correo: PropTypes.string.isRequired,
+    telefono: PropTypes.string.isRequired,
+    estado: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
 }
 
 export default CardUser;
