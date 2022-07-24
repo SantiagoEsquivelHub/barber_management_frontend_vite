@@ -10,7 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-
+import PropTypes from 'prop-types';
 
 ChartJS.register(
   CategoryScale,
@@ -61,6 +61,10 @@ const BarChart = ({ data }) => {
     <Line options={options} data={data1} />
 
   )
+}
+
+BarChart.propTypes = {
+  data: PropTypes.array.isRequired
 }
 
 export default BarChart;

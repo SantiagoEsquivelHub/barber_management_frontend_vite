@@ -1,8 +1,9 @@
 import { useState } from "react";
-import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import axios from "axios";
 import './login.css';
+
+
 
 /*Componente usado para validar el ingreso de usuarios*/
 
@@ -41,7 +42,6 @@ const LoginView = ({ setToken }) => {
             setUser(!user);
             setTimeout(() => {
                 const accessToken = res.data.token;
-                console.log(res.data);
                 setToken(accessToken);
                 localStorage.setItem("token", accessToken);
                 setDatos({
@@ -73,7 +73,7 @@ const LoginView = ({ setToken }) => {
                         <div className="card shadow-lg">
                             <div className="card-body p-5">
                                 <h1 className="fs-4 card-title fw-bold mb-4">Bienvenido</h1>
-                                <form onSubmit={handleSubmit} className="needs-validation" noValidate={true} autoComplete="off">
+                                <form onSubmit={handleSubmit} className="needs-validation" noValidate={true} autoComplete="off" aria-label="form-login">
                                     <div className="mb-3">
                                         <label className="mb-2 text-muted" htmlFor="email">Usuario</label>
                                         <input id="email" type="text" onChange={handleInputChange} value={datos.usuario} className="form-control" name="usuario" required autoFocus />
@@ -113,9 +113,6 @@ const LoginView = ({ setToken }) => {
             </div>
         </section>
     );
-}
-LoginView.propTypes = {
-    setToken: PropTypes.func.isRequired
 }
 
 export default LoginView;

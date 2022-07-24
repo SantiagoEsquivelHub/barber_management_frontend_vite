@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Routes, Route, BrowserRouter as Router, Navigate } from 'react-router-dom'
+import { Routes, Route, BrowserRouter as Router, Navigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import DashboardRouter from '../../modules/dashboard/views/mainView';
 import StaffView from '../../modules/staff/view/main';
 import StaffUserView from '../../modules/staff/view/staffUser';
@@ -37,7 +38,7 @@ const MainRouter = ({ location }) => {
     return (
         <>
             {/* Componente SideBar, el cual nos permite navegar entre los módulos*/}
-            <Sidebar setToken={setToken} />
+            <Sidebar setToken={setToken}/>
 
             {/* Rutas principales condicionadas según el rol del usuario, si algún barbero trata de entrar a una sección que no le corresponde, no se le cargará la información */}
             <Routes>
@@ -51,6 +52,10 @@ const MainRouter = ({ location }) => {
         </>
     )
 
+}
+
+MainRouter.propTypes = {
+    location: PropTypes.string.isRequired
 }
 
 export default MainRouter;
