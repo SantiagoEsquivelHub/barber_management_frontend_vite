@@ -163,7 +163,7 @@ const UsersView = () => {
   const getUrlCreateUser = async () => {
     const fileInput = document.getElementById('url_img_usuario');
     const selectedFile = fileInput.files[0];
-
+console.log(selectedFile)
     const btn = document.getElementsByClassName('btnCrearUsuario');
 
     if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
