@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react"
-import LoginView from "../../security/views/login"
+import StaffView from "../../../../modules/staff/view/main"
 
-describe('Pruebas en <LoginView />', () => {
+describe('Pruebas en <StaffView />', () => {
 
     test('Debe hacer match con el Snapshot', () => {
-        const { container } = render(<LoginView />)
+        const { container } = render(<StaffView />)
         expect(container).toMatchSnapshot();
     })
 

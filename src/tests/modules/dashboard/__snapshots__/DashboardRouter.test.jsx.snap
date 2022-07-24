@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pruebas en <DashboardRouter /> Debe hacer match con el Snapshot 1`] = `
+<div>
+  <div
+    class="contenedor_main"
+  >
+    <h1>
+      Dashboard
+    </h1>
+    <div
+      class="d-flex justify-content-around  mb-3"
+    >
+      <div
+        class="d-flex flex-column col-6 mb-3"
+      >
+        Cargando...
+        <div
+          class="d-flex justify-content-center flex-column align-items-center"
+        >
+          <h4>
+            Top 3 Mejores barberos
+          </h4>
+          <div
+            class="col-8"
+          >
+            Cargando...
+          </div>
+        </div>
+      </div>
+      <div
+        class="d-flex flex-column col-4"
+      >
+        <div
+          class="d-flex justify-content-center flex-column align-items-center"
+        >
+          <div
+            class="m-3 col-6 card"
+          >
+            <div
+              class="card-body"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center card_info mb-2"
+              />
+              <p
+                class="d-flex justify-content-center align-items-center card_text card-text"
+              >
+                Citas registradas hoy
+              </p>
+            </div>
+          </div>
+          <div
+            class="m-3 col-6 card"
+          >
+            <div
+              class="card-body"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center card_info mb-2"
+              />
+              <p
+                class="d-flex justify-content-center align-items-center card_text card-text"
+              >
+                Total de citas en el mes
+              </p>
+            </div>
+          </div>
+          <div
+            class="m-3 col-6 card"
+          >
+            <div
+              class="card-body"
+            >
+              <div
+                class="d-flex justify-content-center align-items-center card_info mb-2"
+              />
+              <p
+                class="d-flex justify-content-center align-items-center card_text card-text"
+              >
+                Promedio de citas por día
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

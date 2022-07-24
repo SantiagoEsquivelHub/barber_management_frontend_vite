@@ -118,13 +118,13 @@ const UsersView = () => {
     openNotificationWithIcon('success');
 
     setLoading(true);
-    setTimeout(() => {
+    const interval = setTimeout(() => {
       setLoading(false);
       setVisible(false);
       onReset();
       window.location.reload();
     }, 1000);
-
+    interval.unref();
   };
 
   /*Función que cierra el modal del formulario para crear usuarios*/

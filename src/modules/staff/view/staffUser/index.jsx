@@ -165,13 +165,13 @@ const StaffUserView = () => {
     openNotificationWithIcon('success');
 
     setLoading(true);
-    setTimeout(() => {
+    const interval = setTimeout(() => {
       setLoading(false);
       setVisible(false);
       onReset();
       window.location.reload();
     }, 1000);
-
+    interval.unref();
   };
 
   /*Función que muestra una notificación cuando se ha logrado crear una cita*/
