@@ -1,11 +1,12 @@
 import React from 'react'
 import iconBarber from '../../../../assets/images/icono.png'
 
+/*Componente usado para mostrar cada uno de los barberos, muestra el nombre, la imagen, el correo, el teléfono y su estado*/
 
- const CardBarber = ({ nombre, correo, telefono, estado, url, id }) => {
+const CardBarber = ({ nombre, correo, telefono, estado, url, id }) => {
     return (
         <div>
-            <div id={id} className="cardBarber">
+            <div id={id} className="cardBarber col-12">
 
                 <li className="ant-list-item"><div class="ant-list-item-meta">
                     <div className="ant-list-item-meta-avatar">
@@ -28,7 +29,7 @@ import iconBarber from '../../../../assets/images/icono.png'
                     <div className={estado == 1 ? 'activo' : 'deshabilitado'}>{estado == 1 ? 'Activo' : 'Deshabilitado'}</div>
                     <ul className="ant-list-item-action">
                         <li>
-                            <img src={iconBarber} className="icono_barber"/>
+                            <img src={iconBarber} className="icono_barber" />
                         </li>
                     </ul>
                 </li>

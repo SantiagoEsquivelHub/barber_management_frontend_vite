@@ -140,6 +140,11 @@
   color: red;
 }
 
+.eliminar_bloqueado {
+  color: black;
+  cursor:auto!important;
+}
+
 .cardUser .ant-list-item-meta {
   align-items: center !important;
 }
@@ -167,12 +172,11 @@
   border-color: rgba(244, 100, 5, 0.5) !important;
 }
 
-
 .contenedor_main .lista {
   overflow: auto;
   height: 80vh;
 }
 
-.contenedor_main .pagination{
-display: none!important;
+.contenedor_main .pagination {
+  display: none !important;
 }

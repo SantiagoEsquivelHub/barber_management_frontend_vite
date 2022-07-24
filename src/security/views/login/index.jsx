@@ -1,13 +1,22 @@
 import { useState } from "react";
-import PropTypes from 'prop-types';
+import { notification } from 'antd';
 import axios from "axios";
 import './login.css';
-import { notification } from 'antd';
 
 
+
+/*Componente usado para validar el ingreso de usuarios*/
 
 const LoginView = ({ setToken }) => {
 
+    /*Estados generales para recepción de datos del usuario*/
+    const [user, setUser] = useState(false);
+    const [datos, setDatos] = useState({
+        usuario: "",
+        clave: ""
+    });
+
+    /*Función para mostrar notificación cuando los datos del usuario para el login son incorrectos*/
     const openNotificationWithIcon = (type) => {
         notification[type]({
             message: '¡Credenciales incorrectas!',
@@ -16,18 +25,14 @@ const LoginView = ({ setToken }) => {
         });
     };
 
-    const [user, setUser] = useState(false);
-    const [datos, setDatos] = useState({
-        usuario: "",
-        clave: ""
-    });
-
+    /*Función para actualizar los datos del usuario cada vez que hace cambios en los inputs del formulario del login*/
     const handleInputChange = (e) => {
         let { name, value } = e.target;
         let newDatos = { ...datos, [name]: value };
         setDatos(newDatos);
     }
 
+    /*Función para enviar los datos ingresados por el usuario para saber si puede ingresar o no*/
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -35,16 +40,20 @@ const LoginView = ({ setToken }) => {
         try {
             let res = await axios.post("http://localhost:3001/usuario/login", datos);
             setUser(!user);
-            setTimeout(() => {
+            const interval = setTimeout(() => {
                 const accessToken = res.data.token;
-                console.log(res.data);
                 setToken(accessToken);
                 localStorage.setItem("token", accessToken);
                 setDatos({
                     usuario: "",
                     clave: ""
                 })
+                localStorage.setItem('usuario', res.data.nombre_usuario)
+                localStorage.setItem('img', res.data.url_img_usuario)
+                localStorage.setItem('rol', res.data.nombre_rol)
+                localStorage.setItem('id', res.data.id_usuario)
             }, 1000);
+            interval.unref();
         } catch (error) {
             if (error.response) {
                 console.log(error.response.data);
@@ -65,7 +74,7 @@ const LoginView = ({ setToken }) => {
                         <div className="card shadow-lg">
                             <div className="card-body p-5">
                                 <h1 className="fs-4 card-title fw-bold mb-4">Bienvenido</h1>
-                                <form onSubmit={handleSubmit} className="needs-validation" noValidate={true} autoComplete="off">
+                                <form onSubmit={handleSubmit} className="needs-validation" noValidate={true} autoComplete="off" aria-label="form-login">
                                     <div className="mb-3">
                                         <label className="mb-2 text-muted" htmlFor="email">Usuario</label>
                                         <input id="email" type="text" onChange={handleInputChange} value={datos.usuario} className="form-control" name="usuario" required autoFocus />
@@ -105,9 +114,6 @@ const LoginView = ({ setToken }) => {
             </div>
         </section>
     );
-}
-LoginView.propTypes = {
-    setToken: PropTypes.func.isRequired
 }
 
 export default LoginView;

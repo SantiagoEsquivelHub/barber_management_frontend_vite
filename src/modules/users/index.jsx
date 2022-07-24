@@ -12,20 +12,26 @@ import {
   Result
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import Pagination from 'react-bootstrap/Pagination';
+import { useGetBase64 } from '../../hooks/useGetBase64';
+import { headers } from '../../components/headers/headers';
 import CardUser from './components/CardUser';
 import './users.css'
 
 const { Option } = Select;
 const { Search } = Input;
 
+/*Layout para inputs de los formularios*/
 const layout = {
   labelCol: { span: 20 },
   wrapperCol: { span: 50 },
 };
 
+
+/*Componente usado para mostrar a cada uno de los usuarios*/
+
 const UsersView = () => {
 
+  /*Estados generales*/
   const [user, setUser] = useState(false);
   const [rol, setRol] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,7 +43,6 @@ const UsersView = () => {
   const [dataUser, setDataUser] = useState(false);
   const [result, setResult] = useState(true);
   const [form] = Form.useForm();
-
   const [datos, setDatos] = useState({
     nombre_usuario: '',
     documento_usuario: '',
@@ -49,24 +54,17 @@ const UsersView = () => {
     rol_usuario: ''
   })
 
+  /*Variables globales para las peticiones*/
   const url = `http://${document.domain}:3001/usuarios/`;
   const urlRol = `http://${document.domain}:3001/roles/`;
   const urlCrearUsuario = `http://${document.domain}:3001/crearUsuario/`;
   const urlBusqueda = `http://${document.domain}:3001/busqueda/`;
-  const btnSearch = document.querySelector('.contenedor_main .ant-input-search-button');
 
-  let prev_page = document.querySelector(".prev-page");
-  let next_page = document.querySelector(".next-page");
+  /*Elementos del DOM*/
   let elementos = document.querySelector(".displaying-num");
-  let current_page = document.querySelector(".current_page");
   let lista = document.querySelector(".lista");
 
-  let token = localStorage.getItem("token");
-  let headers = new Headers();
-  headers.append("Authorization", "Bearer " + token);
-  headers.append("Content-type", "application/json");
-
-
+  /*Función para obtener la data de todos los usuarios*/
   const getUsers = async (e) => {
 
     const requestOptions = {
@@ -81,9 +79,9 @@ const UsersView = () => {
     setUser(data['result']);
     elementos.innerHTML = `${count} elementos`
 
-
   }
 
+  /*Función para obtener los roles del software*/
   const getRoles = async (e) => {
 
     const requestOptions = {
@@ -93,24 +91,18 @@ const UsersView = () => {
 
     const res = await fetch(urlRol, requestOptions);
     const data = await res.json();
-    //console.log("roles", data);
+
     setRol(data);
 
   }
 
-  useEffect(() => {
-
-    getUsers();
-    getRoles();
-
-  }, [])
-
-
+  /*Función que muestra el modal que tiene el formulario para crear usuarios*/
   const showModal = () => {
     setVisible(true);
   };
 
-  const handleOk = async (e) => {
+  /*Función que crea usuarios*/
+  const handleSubmitUsers = async (e) => {
 
     const requestOptions = {
       method: 'POST',
@@ -119,41 +111,33 @@ const UsersView = () => {
         ...datos
       }
       )
-
     }
 
     const res = await fetch(urlCrearUsuario, requestOptions);
-    //console.log(res)
+
     openNotificationWithIcon('success');
 
     setLoading(true);
-    setTimeout(() => {
+    const interval = setTimeout(() => {
       setLoading(false);
       setVisible(false);
       onReset();
       window.location.reload();
     }, 1000);
-
+    interval.unref();
   };
 
+  /*Función que cierra el modal del formulario para crear usuarios*/
   const handleCancel = () => {
     setVisible(false);
   };
 
-
+  /*Función que limpia los inputs del formulario para crear usuarios*/
   const onReset = () => {
     form.resetFields();
   };
 
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e.fileList;
-    }
-
-    return e.fileList;
-  };
-
-
+  /*Función para actualizar los datos del usuario cada vez que hace cambios en los inputs del formulario de crear usuarios*/
   const handleInputChange = (e) => {
 
     setDatos({
@@ -163,6 +147,7 @@ const UsersView = () => {
 
   }
 
+  /*Función que actualiza cual item de la lista desplegable es seleccionado*/
   const handleSelectChange = (value) => {
 
     setDatos({
@@ -173,30 +158,25 @@ const UsersView = () => {
 
   };
 
-  const props = {
-    name: 'file',
-    headers: {
-      authorization: 'authorization-text',
-    },
-  }
 
-  const getUrl = async () => {
+  /*Función para convertir la URL del adjunto que suben al formulario de crear usuarios en base64 y almacenarlo en el estado global*/
+  const getUrlCreateUser = async () => {
     const fileInput = document.getElementById('url_img_usuario');
     const selectedFile = fileInput.files[0];
-
+console.log(selectedFile)
     const btn = document.getElementsByClassName('btnCrearUsuario');
 
     if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
-      //console.log('LLEGO');
+      console.log('LLEGO');
       alert("Solo se permiten imágenes en PNG, JPG y JPEG")
       fileInput.value = "";
-      //console.log(btn[0])
+      console.log(btn[0])
       btn[0].setAttribute('disabled', 'true');
     } else {
       btn[0].removeAttribute('disabled');
 
 
-      let result = await getBase64(selectedFile);
+      let result = await useGetBase64(selectedFile);
       let url = result;
 
       setDatos({
@@ -206,17 +186,7 @@ const UsersView = () => {
     }
   }
 
-  const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = () => resolve(reader.result);
-
-      reader.onerror = (error) => reject(error);
-    });
-
-
+  /*Función que muestra una notificación cuando se ha logrado crear un usuario*/
   const openNotificationWithIcon = (type) => {
     notification[type]({
       message: '¡Usuario creado correctamente!',
@@ -225,8 +195,8 @@ const UsersView = () => {
     });
   };
 
+  /*Función para hacer búsquedas de usuarios*/
   const onSearchUsers = async (value) => {
-
 
     if (value == '') {
       getUsers()
@@ -235,18 +205,12 @@ const UsersView = () => {
       lista.removeAttribute('style')
     }
 
-
     setBusqueda({
       search: value,
       page: 1
     });
 
     localStorage.setItem('search', value);
-
-
-
-
-    console.log(isNaN(parseInt(value)))
 
     const requestOptions = {
       method: 'POST',
@@ -257,16 +221,13 @@ const UsersView = () => {
     }
 
     const ruta = urlBusqueda + value;
-
-    console.log(ruta);
-
     const res = await fetch(ruta, requestOptions);
     const data = await res.json();
     let busquedaArr = Object.values(data["result"]);
 
     if (data["result"].length == 0) {
       setResult(false)
-    } 
+    }
 
     setDataUser(busquedaArr);
     setUser(false);
@@ -282,51 +243,31 @@ const UsersView = () => {
     `;
     }
 
-    //current_page.textContent = data['pages'];
-
-    if (data['next'] == null) {
-      prev_page.setAttribute("style", "display:none");
-    } else {
-      prev_page.removeAttribute("style");
-      prev_page.setAttribute("data-page", `${data["previous"]}`);
-    }
-
-    if (data['previous'] == null) {
-      next_page.setAttribute("style", "display:none");
-    } else {
-      next_page.removeAttribute("style");
-      next_page.setAttribute("data-page", `${data["next"]}`);
-    }
-
-
-
-
-    /* else {
- 
-      busquedaArr.forEach(user => {
-        let busquedaHTML =
-          `<CardUser
-        key=${user.id_usuario}
-        nombre=${user.nombre_usuario}
-        correo=${user.correo_usuario}
-        telefono=${user.telefono_usuario}
-        estado=${user.estado_usuario}
-        url=${user.url_img_usuario}
-        id=${user.id_usuario}
-        />`;
- 
-        bodyUsers.innerHTML += busquedaHTML;
- 
-      })
-    }  */
   }
 
-  const prevNextPage = (e) => {
+  /*Funciones que se ejecutarán cuando se renderice la página*/
+  useEffect(() => {
 
-    /*  let search = localStorage.getItem("search")
-     let page_next_prev = e.target.getAttribute("data-page");
-     onSearchUsers(search); */
+    getUsers();
+    getRoles();
+
+  }, [])
+
+  /*Función y objetos del antd requeridos para el uso del componente Upload*/
+  const props = {
+    name: 'file',
+    headers: {
+      authorization: 'authorization-text',
+    }
   }
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e.fileList;
+    }
+
+    return e.fileList;
+  };
 
   return (
     <div className='contenedor_main'>
@@ -346,15 +287,6 @@ const UsersView = () => {
           enterButton />
 
         <span className="displaying-num m-2"></span>
-        <Pagination className='d-flex align-items-center'>
-          <span className="displaying-num m-2"></span>
-          <Pagination.Prev className='prev-page' onClick={prevNextPage} data-page="" />
-
-          <Pagination.Item className='current_page' active>{1}</Pagination.Item>
-
-          <Pagination.Next className='next-page' onClick={prevNextPage} data-page="" />
-
-        </Pagination>
       </div>
 
       <Modal
@@ -368,15 +300,15 @@ const UsersView = () => {
         ]}
       >
 
-        <Form {...layout} form={form} name="crearUsuario" className="crearUsuario" id="crearUsuario" onFinish={handleOk}>
+        <Form {...layout} form={form} name="crearUsuario" className="crearUsuario" id="crearUsuario" onFinish={handleSubmitUsers}>
 
           <Row className='d-flex align-items-center justify-content-center foto_perfil'>
             <Form.Item
               name="url_img_usuario"
               label=""
               valuePropName="fileList"
+              onChange={getUrlCreateUser}
               getValueFromEvent={normFile}
-              onChange={getUrl}
               rules={[{ required: true, message: "Este campo es obligatorio" }]}
             >
               <Upload name="url_img_usuario" listType="picture" {...props} maxCount={1} id="url_img_usuario" accept="image/png, image/jpeg, image/jpg">

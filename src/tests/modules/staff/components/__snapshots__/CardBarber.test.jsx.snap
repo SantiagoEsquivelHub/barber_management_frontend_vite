@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pruebas en <CardBarber /> Debe hacer match con el Snapshot 1`] = `
+<div>
+  <div>
+    <div
+      class="cardBarber col-12"
+    >
+      <li
+        class="ant-list-item"
+      >
+        <div
+          class="ant-list-item-meta"
+        >
+          <div
+            class="ant-list-item-meta-avatar"
+          >
+            <span
+              class="ant-avatar ant-avatar-circle ant-avatar-image"
+            >
+              <img />
+            </span>
+          </div>
+          <div
+            class="ant-list-item-meta-content"
+          >
+            <h4
+              class="ant-list-item-meta-title"
+            >
+              <a
+                href="/staff/undefined"
+              />
+            </h4>
+          </div>
+          <div
+            class="ant-list-item-meta-content"
+          >
+            <div
+              class="ant-list-item-meta-description correo"
+            />
+          </div>
+          <div
+            class="ant-list-item-meta-content"
+          >
+            <div
+              class="ant-list-item-meta-description telefono"
+            />
+          </div>
+        </div>
+        <div
+          class="deshabilitado"
+        >
+          Deshabilitado
+        </div>
+        <ul
+          class="ant-list-item-action"
+        >
+          <li>
+            <img
+              class="icono_barber"
+              src=""
+            />
+          </li>
+        </ul>
+      </li>
+    </div>
+  </div>
+</div>
+`;

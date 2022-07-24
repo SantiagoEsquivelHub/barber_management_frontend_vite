@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pruebas en <BarChart /> Debe hacer match con el Snapshot 1`] = `
+<div>
+  <canvas
+    height="0"
+    role="img"
+    style="display: block; box-sizing: border-box; height: 0px; width: 0px;"
+    width="0"
+  />
+</div>
+`;
