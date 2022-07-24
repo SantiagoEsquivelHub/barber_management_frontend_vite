@@ -1,5 +1,6 @@
-import React from 'react'
-import iconBarber from '../../../../assets/images/icono.png'
+import React from 'react';
+import PropTypes from 'prop-types';
+import iconBarber from '../../../../assets/images/icono.png';
 import './CardTop.css';
 
 /*Componente usado para mostrar cada uno de los barberos del top de los 3 mejores barberos, solo muestra el nombre, la imagen y el número de servicios por el mes*/
@@ -34,4 +35,12 @@ const CardTop = ({ nombre, url, numServicios, id }) => {
         </div>
     )
 }
+
+CardTop.propTypes = {
+    nombre: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    numServicios: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired
+}
+
 export default CardTop;

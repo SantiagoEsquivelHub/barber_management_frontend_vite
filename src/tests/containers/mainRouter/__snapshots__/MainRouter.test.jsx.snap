@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pruebas en <MainRouter /> Debe hacer match con el Snapshot 1`] = `
+<div>
+  <section
+    class="background h-100"
+  >
+    <div
+      class="h-100"
+    >
+      <div
+        class="row g-0 align-items-center justify-content-end h-100 px-5 gradient"
+      >
+        <div
+          class="col-xxl-3 col-xl-5 col-lg-5 col-md-7 col-sm-9 col-lg-auto sw-lg-70"
+        >
+          <div
+            class="card shadow-lg"
+          >
+            <div
+              class="card-body p-5"
+            >
+              <h1
+                class="fs-4 card-title fw-bold mb-4"
+              >
+                Bienvenido
+              </h1>
+              <form
+                aria-label="form-login"
+                autocomplete="off"
+                class="needs-validation"
+                novalidate=""
+              >
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="mb-2 text-muted"
+                    for="email"
+                  >
+                    Usuario
+                  </label>
+                  <input
+                    class="form-control"
+                    id="email"
+                    name="usuario"
+                    required=""
+                    type="text"
+                    value=""
+                  />
+                  <div
+                    class="invalid-feedback"
+                  >
+                    Usuario inválido
+                  </div>
+                </div>
+                <div
+                  class="mb-3"
+                >
+                  <div
+                    class="mb-2 w-100"
+                  >
+                    <label
+                      class="text-muted"
+                      for="password"
+                    >
+                      Contraseña
+                    </label>
+                  </div>
+                  <input
+                    class="form-control"
+                    id="password"
+                    name="clave"
+                    required=""
+                    type="password"
+                    value=""
+                  />
+                  <div
+                    class="invalid-feedback"
+                  >
+                    Contraseña es requirida
+                  </div>
+                </div>
+                <div
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <button
+                    class="btn btn-primary"
+                    type="submit"
+                  >
+                    <i
+                      class="bi bi-box-arrow-in-right"
+                    />
+                     Ingresar
+                  </button>
+                  <div
+                    class="cargando"
+                  >
+                    <div
+                      class="spinner-grow text-warning"
+                      role="status"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="card-footer py-3 border-0"
+            >
+              <div
+                class="text-center"
+              >
+                Todos los derechos reservados © 2022
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+`;

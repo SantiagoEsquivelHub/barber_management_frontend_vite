@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pruebas en <StaffUserView /> Debe hacer match con el Snapshot 1`] = `
+<div>
+  <div
+    class="contenedor_main"
+  >
+    Cargando...
+    <div
+      class="timeline_interna col-6"
+    >
+      <div
+        class="m-3 card"
+      >
+        <div
+          class="card-body"
+        >
+          <div
+            class="d-flex align-items-center justify-content-between mb-2"
+          >
+            <div
+              class="card-title h5"
+            >
+              Historial
+            </div>
+          </div>
+          <div>
+            Sin información
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
