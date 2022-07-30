@@ -65,13 +65,13 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         openNotificationWithIcon('success');
 
         setLoading(true);
-        const interval = setTimeout(() => {
+        setTimeout(() => {
             setLoading(false);
             setVisible(false);
             onReset();
             window.location.reload();
         }, 1000);
-        interval.unref();
+
     }
 
     /*Función para eliminar usuarios*/
@@ -89,10 +89,10 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
         openNotificationWithIconDelete('success');
 
         setLoading(true);
-        const interval = setTimeout(() => {
+        setTimeout(() => {
             window.location.reload();
         }, 1000);
-        interval.unref();
+
     }
 
     /*Función para obtener la data de cada usuario*/
