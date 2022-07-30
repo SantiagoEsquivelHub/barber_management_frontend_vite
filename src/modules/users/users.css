@@ -134,6 +134,7 @@
 
 .cardUser .editar {
   color: #fdc43f;
+  cursor: pointer;
 }
 
 .cardUser .eliminar {
@@ -151,7 +152,7 @@
 
 .imgUser img {
   width: 300px;
-  height: 300px;
+  height: 200px;
 }
 
 .contenedor_main .active > .page-link {

@@ -1,18 +1,19 @@
 .card_info {
-  border: 1px solid black;
+  border: 1px solid #b29168b6;
   border-radius: 50%;
   width: 70px;
   height: 70px;
-  background: #fdc43f;
+  background: rgba(253, 196, 63, 0.5);
   text-align: center;
   margin: 0px auto;
   padding: 3%;
-  font-size: 20px;
+  font-size: 25px;
+  color: rgba(0, 0, 0, 0.53);
 }
 
 .img_interna {
   width: 50%;
-  margin: 0 auto;
+  margin: 5% auto;
   border-radius: 50%;
   border: 1px solid #fdc43f;
 }
@@ -26,7 +27,7 @@
 
 .timeline_interna {
   overflow: auto;
-  height: 50vh;
+  height: 45vh;
 }
 
 .card {
@@ -38,6 +39,15 @@
 .card_text {
   font-size: 20px;
   color: gray;
+}
+
+.card_text_info {
+  font-size: 15px;
+  color: gray;
+}
+
+.card p {
+  margin: 0 0 2% 0 !important;
 }
 
 .btnAgregarCita {
@@ -93,6 +103,7 @@
 
 .editar {
   color: #fdc43f;
+  cursor: pointer;
 }
 
 .ocultar {

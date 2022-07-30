@@ -118,13 +118,13 @@ const UsersView = () => {
     openNotificationWithIcon('success');
 
     setLoading(true);
-    const interval = setTimeout(() => {
+    setTimeout(() => {
       setLoading(false);
       setVisible(false);
       onReset();
       window.location.reload();
     }, 1000);
-    interval.unref();
+
   };
 
   /*Función que cierra el modal del formulario para crear usuarios*/
@@ -163,7 +163,7 @@ const UsersView = () => {
   const getUrlCreateUser = async () => {
     const fileInput = document.getElementById('url_img_usuario');
     const selectedFile = fileInput.files[0];
-console.log(selectedFile)
+    console.log(selectedFile)
     const btn = document.getElementsByClassName('btnCrearUsuario');
 
     if (selectedFile.type != "image/png" && selectedFile.type != "image/jpeg" && selectedFile.type != "image/jpg") {
@@ -321,7 +321,7 @@ console.log(selectedFile)
             <div className='d-flex justify-content-center'>
               <Col span={12} className="m-3">
                 <Form.Item name="nombre_usuario" label="Nombre" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
-                  <Input type="text" onChange={handleInputChange} name="nombre_usuario" />
+                  <Input type="text" pattern="^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$" title="Ingresa un nombre válido" onChange={handleInputChange} name="nombre_usuario" />
                 </Form.Item>
                 <Form.Item name="fecha_nacimiento_usuario" label="Nacimiento" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
                   <Input type="date" onChange={handleInputChange} name="fecha_nacimiento_usuario" />
@@ -347,13 +347,13 @@ console.log(selectedFile)
               </Col>
               <Col span={12} className="m-3">
                 <Form.Item name="correo_usuario" label="Correo" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
-                  <Input type="text" onChange={handleInputChange} name="correo_usuario" />
+                  <Input type="text" pattern="^[^@]+@[^@]+\.[a-zA-Z]{2,}$" title="Ingresa un correo válido" onChange={handleInputChange} name="correo_usuario" />
                 </Form.Item>
                 <Form.Item name="documento_usuario" label="Documento" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
-                  <Input type="text" onChange={handleInputChange} name="documento_usuario" />
+                  <Input type="text" pattern="([0-9]{6,10})" title="Ingresa un número de documento válido" onChange={handleInputChange} name="documento_usuario" />
                 </Form.Item>
                 <Form.Item name="telefono_usuario" label="Teléfono" rules={[{ required: true, message: "Este campo es obligatorio" }]} className="d-flex flex-column">
-                  <Input type="text" onChange={handleInputChange} name="telefono_usuario" />
+                  <Input type="text" pattern="([0-9]{7,10})" title="Ingresa un número de teléfono/celular válido" onChange={handleInputChange} name="telefono_usuario" />
                 </Form.Item>
               </Col>
             </div>
