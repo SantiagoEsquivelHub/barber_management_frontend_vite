@@ -31,7 +31,7 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Servicios brindados este mes',
+      text: 'Reporte mensual',
     },
   },
 };

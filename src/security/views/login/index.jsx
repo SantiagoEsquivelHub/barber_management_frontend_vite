@@ -40,7 +40,7 @@ const LoginView = ({ setToken }) => {
         try {
             let res = await axios.post("http://localhost:3001/usuario/login", datos);
             setUser(!user);
-            const interval = setTimeout(() => {
+            setTimeout(() => {
                 const accessToken = res.data.token;
                 setToken(accessToken);
                 localStorage.setItem("token", accessToken);
@@ -53,7 +53,7 @@ const LoginView = ({ setToken }) => {
                 localStorage.setItem('rol', res.data.nombre_rol)
                 localStorage.setItem('id', res.data.id_usuario)
             }, 1000);
-            interval.unref();
+
         } catch (error) {
             if (error.response) {
                 console.log(error.response.data);

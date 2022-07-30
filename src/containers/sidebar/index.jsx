@@ -19,12 +19,12 @@ const Sidebar = ({ setToken }) => {
     const handleLogout = () => {
         setLogout(!logout);
         localStorage.removeItem('token');
-        const interval = setTimeout(() => {
+        setTimeout(() => {
             setToken();
             navegate("/");
             setLogout(false);
         }, 1000);
-        interval.unref();
+
     }
 
     /*Función para tener los datos del usuario que acaba de entrar al software*/
