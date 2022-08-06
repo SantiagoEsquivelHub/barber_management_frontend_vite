@@ -401,29 +401,30 @@ const StaffUserView = () => {
           </div>
       }
 
-      <div className='timeline_interna col-6'>
+      <div className='timeline_interna col-6 centrar'>
         <Card className='m-3' >
           <Card.Body>
-            <div className='d-flex align-items-center justify-content-between mb-2'>
+            <div className='d-flex align-items-center justify-content-center mb-2'>
               <Card.Title className=''>Historial</Card.Title>
             </div>
             <div>
+              <Timeline mode="alternate">
+                {!historial || historial.length == 0 ? <Timeline.Item color='#fdc43f'></Timeline.Item> :
 
-              {!historial || historial.length == 0 ? 'Sin información' :
+                  historial.map(element => {
 
-                historial.map(element => {
-
-                  return <Timeline.Item color='#fdc43f'>
-                    <p className='yellow'>{element.nombre_servicio}</p>
-                    <p>{element.nombre_cliente}</p>
-                    <p>{element.fecha_cita}</p>
-                    <p className='precio'>${element.precio_servicio}</p>
-                  </Timeline.Item>
+                    return <Timeline.Item color='#fdc43f'>
+                      <p className='yellow'>{element.nombre_servicio}</p>
+                      <p>{element.nombre_cliente}</p>
+                      <p>{element.fecha_cita}</p>
+                      <p className='precio'>${element.precio_servicio}</p>
+                    </Timeline.Item>
 
 
-                })
+                  })
 
-              }
+                }
+              </Timeline>
             </div>
           </Card.Body>
         </Card>

@@ -14,3 +14,7 @@
   border-color: #fdc43f !important;
   background: transparent !important;
 }
+
+.centrar {
+  margin: 0 auto !important;
+}
