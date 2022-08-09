@@ -489,7 +489,7 @@ const StaffUserView = () => {
           <div className='d-flex justify-content-center'>
             <Form.Item >
               <Button htmlType="button" onClick={onReset}>
-                Reset
+                Limpiar
               </Button>
               <Button type="primary" htmlType="submit" loading={loading} className="btnCrearCita" id={internaBarber.id_usuario}>
                 Registar
