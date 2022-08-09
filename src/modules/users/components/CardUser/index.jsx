@@ -356,7 +356,7 @@ export const CardUser = ({ nombre, correo, telefono, estado, url, id }) => {
                     <div className='d-flex justify-content-center'>
                         <Form.Item >
                             <Button htmlType="button" onClick={onReset}>
-                                Reset
+                                Limpiar
                             </Button>
                             <Button type="primary" htmlType="submit" loading={loading} className="btnEditarUsuario">
                                 Actualizar
