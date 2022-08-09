@@ -32,6 +32,7 @@ const layout = {
 const UsersView = () => {
 
   /*Estados generales*/
+  let id_admin = localStorage.getItem('id');
   const [user, setUser] = useState(false);
   const [rol, setRol] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,7 +52,8 @@ const UsersView = () => {
     correo_usuario: '',
     estado_usuario: '',
     url_img_usuario: '',
-    rol_usuario: ''
+    rol_usuario: '',
+    id_admin: id_admin
   })
 
   /*Variables globales para las peticiones*/
@@ -361,7 +363,7 @@ const UsersView = () => {
           <div className='d-flex justify-content-center'>
             <Form.Item >
               <Button htmlType="button" onClick={onReset}>
-                Reset
+                Limpiar
               </Button>
               <Button type="primary" htmlType="submit" loading={loading} className="btnCrearUsuario">
                 Crear
