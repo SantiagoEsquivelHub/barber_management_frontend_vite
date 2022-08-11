@@ -153,6 +153,7 @@
 .imgUser img {
   width: 300px;
   height: 200px;
+  object-fit: contain;
 }
 
 .contenedor_main .active > .page-link {
