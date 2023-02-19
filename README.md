@@ -1,6 +1,4 @@
-Proyecto de Desarrollo de Software 1
-
-------- FRONTEND-------
+### FRONTEND
 
 Para ejecutar el frontend siga estos pasos:
 
